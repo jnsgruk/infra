@@ -1,0 +1,5 @@
+env/mariadb.env
+env/nextcloud.env
+env/compose.env
+sops.env
+data/

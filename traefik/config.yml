@@ -1,0 +1,14 @@
+# Used to redirect traffic from a TCP router to wstunnel running on the host
+tcp:
+  services:
+    wstunnel:
+      loadBalancer:
+        servers:
+          - address: "host.docker.internal:4443"
+
+  routers:
+    wstunnel:
+      rule: "HostSNI(`wss.somedomain.com`)"
+      service: "wstunnel"
+      tls:
+        passthrough: true
