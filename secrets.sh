@@ -1,5 +1,4 @@
 #!/bin/bash
-set -euo pipefail
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Output green message prefixed with [+]
 info() { echo -e "\e[92m[+] ${1:-}\e[0m"; }
@@ -44,10 +43,10 @@ install_sops() {
     SOPS_VERSION=$(curl -sNL https://github.com/mozilla/sops/tags | grep -m1 -Po '(?<=href="/mozilla/sops/releases/tag/v)[0-9]+\.[0-9]+\.[0-9]+')
     # Download the binary into /tmp for now
     info "Installing sops v${SOPS_VERSION} to /usr/local/bin/sops"
-    curl -sNLo /tmp/sops "https://github.com/mozilla/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux"
+    curl -Lo /tmp/sops "https://github.com/mozilla/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux"
     # Install the binary to /usr/local/bin and set permissions
-    sudo mkdir -p /usr/local/bin/sops
-    sudo mv sops /usr/local/bin/sops
+    sudo mkdir -p /usr/local/bin
+    sudo mv /tmp/sops /usr/local/bin/sops
     sudo chmod +x /usr/local/bin/sops
   fi
   info "Sops installed"
