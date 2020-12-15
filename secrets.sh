@@ -38,7 +38,7 @@ install_sops() {
   info "Checking for sops"
   # Check for sops in path
   if ! command -v sops >/dev/null; then
-    warn "Sops binary not found"
+    warning "Sops binary not found"
     info "Checking latest version of sops"
     # Get the latest version from the Github release page
     SOPS_VERSION=$(curl -sNL https://github.com/mozilla/sops/tags | grep -m1 -Po '(?<=href="/mozilla/sops/releases/tag/v)[0-9]+\.[0-9]+\.[0-9]+')
