@@ -8,7 +8,7 @@ tcp:
 
   routers:
     wstunnel:
-      rule: "HostSNI(`wss.somedomain.com`)"
+      rule: "HostSNI(`wss.jnsgr.uk`)"
       service: "wstunnel"
       tls:
         passthrough: true
