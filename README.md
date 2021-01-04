@@ -4,9 +4,7 @@ This repo contains the Infrastructure-as-Code that creates my personal infrastru
 
 - [A DigitalOcean Droplet](./terraform/personal-infra.tf)
 - [A DigitalOcean Firewall](./terraform/personal-infra.tf)
-
 - DNS Records for my domains:
-
   - [jnsgr.uk](./terraform/dns-jnsgr-uk.tf)
   - [jseager.co.uk](./terraform/dns-jseager-co-uk.tf)
   - [jon0.co.uk](./terraform/dns-jon0-co-uk.tf)
