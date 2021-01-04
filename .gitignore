@@ -1,5 +1,11 @@
 env/mariadb.env
 env/nextcloud.env
 env/compose.env
+env/terraform.env
+
 sops.env
+
 data/
+
+terraform/.terraform
+terraform/.terraform.lock.hcl

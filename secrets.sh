@@ -17,13 +17,13 @@ main() {
   # Parse first argument to script
   if [[ "${1:-}" == "encrypt" ]]; then
     # If encrypt - then loop over the files we want to encrypt
-    for i in nextcloud mariadb compose; do
+    for i in nextcloud mariadb compose terraform; do
       info "Encrypting env/$i.env => env/$i.enc.env"
       sops --encrypt --azure-kv "${SOPS_KEY_ID}" "${DIR}/env/${i}.env" > "${DIR}/env/${i}.enc.env"
     done
   elif [[ "${1:-}" == "decrypt" ]]; then
     # If decrypt - then loop over the files we want to encrypt
-    for i in nextcloud mariadb compose; do
+    for i in nextcloud mariadb compose terraform; do
       info "Decrypting env/$i.enc.env => env/$i.env"
       sops --decrypt --azure-kv "${SOPS_KEY_ID}" "${DIR}/env/${i}.enc.env" > "${DIR}/env/${i}.env"
     done
