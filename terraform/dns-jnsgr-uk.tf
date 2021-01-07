@@ -76,6 +76,32 @@ resource "digitalocean_record" "jnsgruk-www" {
   ttl    = 3600
 }
 
+# CNAME Records
+
+resource "digitalocean_record" "jnsgruk-dkim1" {
+  domain = digitalocean_domain.jnsgruk.id
+  type   = "CNAME"
+  name   = "fm1._domainkey"
+  value  = "fm1.jnsgr.uk.dkim.fmhosted.com."
+  ttl    = 3600
+}
+
+resource "digitalocean_record" "jnsgruk-dkim2" {
+  domain = digitalocean_domain.jnsgruk.id
+  type   = "CNAME"
+  name   = "fm2._domainkey"
+  value  = "fm2.jnsgr.uk.dkim.fmhosted.com."
+  ttl    = 3600
+}
+
+resource "digitalocean_record" "jnsgruk-dkim3" {
+  domain = digitalocean_domain.jnsgruk.id
+  type   = "CNAME"
+  name   = "fm3._domainkey"
+  value  = "fm3.jnsgr.uk.dkim.fmhosted.com."
+  ttl    = 3600
+}
+
 # TXT Records
 
 resource "digitalocean_record" "jnsgruk-keybase-proof" {
@@ -84,4 +110,32 @@ resource "digitalocean_record" "jnsgruk-keybase-proof" {
   name   = "@"
   value  = "keybase-site-verification=kim2lHkuXnd-QgMAhiQHJYJNNS2TDXkZe-as4L6drpA"
   ttl    = 3600
+}
+
+resource "digitalocean_record" "jnsgruk-fastmail-spf" {
+  domain = digitalocean_domain.jnsgruk.id
+  type   = "TXT"
+  name   = "@"
+  value  = "v=spf1 include:spf.messagingengine.com ?all"
+  ttl    = 3600
+}
+
+# MX Records
+
+resource "digitalocean_record" "jnsgruk-fastmail-1" {
+  domain   = digitalocean_domain.jnsgruk.id
+  type     = "MX"
+  name     = "@"
+  value    = "in1-smtp.messagingengine.com."
+  priority = 10
+  ttl      = 3600
+}
+
+resource "digitalocean_record" "jnsgruk-fastmail-2" {
+  domain   = digitalocean_domain.jnsgruk.id
+  type     = "MX"
+  name     = "@"
+  value    = "in2-smtp.messagingengine.com."
+  priority = 20
+  ttl      = 3600
 }
