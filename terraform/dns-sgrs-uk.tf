@@ -26,6 +26,23 @@ resource "digitalocean_record" "sgrsuk-ns3" {
   ttl    = 1800
 }
 
+# A Records
+
+resource "digitalocean_record" "sgrsuk-mail-1" {
+  domain = digitalocean_domain.sgrsuk.id
+  type   = "A"
+  name   = "mail"
+  value  = "66.111.4.147"
+  ttl    = 3600
+}
+
+resource "digitalocean_record" "sgrsuk-mail-2" {
+  domain = digitalocean_domain.sgrsuk.id
+  type   = "A"
+  name   = "mail"
+  value  = "66.111.4.148"
+  ttl    = 3600
+}
 
 # CNAME Records
 
@@ -80,5 +97,100 @@ resource "digitalocean_record" "sgrsuk-fastmail-2" {
   name     = "@"
   value    = "in2-smtp.messagingengine.com."
   priority = 20
+  ttl      = 3600
+}
+
+# SRV Records
+
+# SMTP Auto-Discovery
+resource "digitalocean_record" "sgrsuk-smtp-auto" {
+  domain   = digitalocean_domain.sgrsuk.id
+  type     = "SRV"
+  name     = "_submission._tcp"
+  value    = "smtp.fastmail.com."
+  port     = 587
+  weight   = 1
+  priority = 0
+  ttl      = 3600
+}
+
+# IMAP Auto-Discovery
+resource "digitalocean_record" "sgrsuk-imap-auto" {
+  domain   = digitalocean_domain.sgrsuk.id
+  type     = "SRV"
+  name     = "_imap._tcp"
+  value    = "."
+  port     = 0
+  weight   = 0
+  priority = 0
+  ttl      = 3600
+}
+
+resource "digitalocean_record" "sgrsuk-imaps-auto" {
+  domain   = digitalocean_domain.sgrsuk.id
+  type     = "SRV"
+  name     = "_imaps._tcp"
+  value    = "imap.fastmail.com."
+  port     = 993
+  weight   = 1
+  priority = 0
+  ttl      = 3600
+}
+
+# JMAP Auto-Discovery
+resource "digitalocean_record" "sgrsuk-jmap-auto" {
+  domain   = digitalocean_domain.sgrsuk.id
+  type     = "SRV"
+  name     = "_jmap._tcp"
+  value    = "jmap.fastmail.com."
+  port     = 443
+  weight   = 1
+  priority = 0
+  ttl      = 3600
+}
+
+# CardDAV Auto-Discovery
+resource "digitalocean_record" "sgrsuk-carddav-auto" {
+  domain   = digitalocean_domain.sgrsuk.id
+  type     = "SRV"
+  name     = "_carddav._tcp"
+  value    = "."
+  port     = 0
+  weight   = 0
+  priority = 0
+  ttl      = 3600
+}
+
+resource "digitalocean_record" "sgrsuk-carddavs-auto" {
+  domain   = digitalocean_domain.sgrsuk.id
+  type     = "SRV"
+  name     = "_carddavs._tcp"
+  value    = "carddav.fastmail.com."
+  port     = 443
+  weight   = 1
+  priority = 0
+  ttl      = 3600
+}
+
+# CalDAV Auto-Discovery
+resource "digitalocean_record" "sgrsuk-caldav-auto" {
+  domain   = digitalocean_domain.sgrsuk.id
+  type     = "SRV"
+  name     = "_caldav._tcp"
+  value    = "."
+  port     = 0
+  weight   = 0
+  priority = 0
+  ttl      = 3600
+}
+
+resource "digitalocean_record" "sgrsuk-caldavs-auto" {
+  domain   = digitalocean_domain.sgrsuk.id
+  type     = "SRV"
+  name     = "_caldavs._tcp"
+  value    = "caldav.fastmail.com."
+  port     = 443
+  weight   = 1
+  priority = 0
   ttl      = 3600
 }
