@@ -77,6 +77,25 @@ services:
       - "traefik.http.routers.jnsgruk.tls.certresolver=myhttpchallenge"
     restart: unless-stopped
 
+  lounge:
+    image: ghcr.io/linuxserver/thelounge
+    container_name: thelounge
+    networks:
+      - proxy
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - $PWD/data/thelounge:/config
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bin.rule=Host(`irc.jnsgr.uk`)"
+      - "traefik.http.routers.bin.entrypoints=websecure"
+      - "traefik.http.routers.bin.tls.certresolver=myhttpchallenge"
+      - "traefik.http.routers.bin.tls=true"
+    restart: always
+
   bin:
     build:
       context: .

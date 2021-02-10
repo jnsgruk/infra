@@ -52,6 +52,14 @@ resource "digitalocean_record" "jnsgruk-cloud" {
   ttl    = 3600
 }
 
+resource "digitalocean_record" "jnsgruk-irc" {
+  domain = digitalocean_domain.jnsgruk.id
+  type   = "A"
+  name   = "irc"
+  value  = digitalocean_droplet.droplet_jnsgruk.ipv4_address
+  ttl    = 3600
+}
+
 resource "digitalocean_record" "jnsgruk-monitor" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
