@@ -90,10 +90,10 @@ services:
       - $PWD/data/thelounge:/config
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bin.rule=Host(`irc.jnsgr.uk`)"
-      - "traefik.http.routers.bin.entrypoints=websecure"
-      - "traefik.http.routers.bin.tls.certresolver=myhttpchallenge"
-      - "traefik.http.routers.bin.tls=true"
+      - "traefik.http.routers.thelounge.rule=Host(`irc.jnsgr.uk`)"
+      - "traefik.http.routers.thelounge.entrypoints=websecure"
+      - "traefik.http.routers.thelounge.tls.certresolver=myhttpchallenge"
+      - "traefik.http.routers.thelounge.tls=true"
     restart: always
 
   bin:
