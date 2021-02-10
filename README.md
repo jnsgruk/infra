@@ -17,6 +17,7 @@ It also manages the following services on the droplet:
 - [nextcloud](https://nextcloud.com/) (backed by mariadb & redis)
 - [onlyoffice](https://hub.docker.com/r/onlyoffice/documentserver/)
 - [bin](https://github.com/w4/bin)
+- [the lounge](https://thelounge.chat/)
 - [jnsgr.uk](https://github.com/jnsgruk/jnsgr.uk)
 - [watchtower](https://github.com/containrrr/watchtower)
 
