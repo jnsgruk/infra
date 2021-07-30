@@ -156,7 +156,7 @@ services:
   nextcloud-db:
     image: mariadb
     container_name: nextcloud-db
-    command: --transaction-isolation=READ-COMMITTED --log-bin=mysqld-bin --binlog-format=ROW --innodb=on
+    command: --transaction-isolation=READ-COMMITTED --log-bin=mysqld-bin --binlog-format=ROW --innodb=on --innodb-read-only-compressed=OFF
     networks:
       - nextcloud
     volumes:
