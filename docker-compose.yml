@@ -113,12 +113,10 @@ services:
     restart: always
 
   barry:
-    image: ghcr.io/linuxserver/nginx
+    image: jnsgruk/bestbarry:latest
     container_name: barry
     networks:
       - proxy
-    volumes:
-     - $PWD/data/bestbarry:/config/www
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.barry.rule=Host(`bestbarry.uk`) || Host(`www.bestbarry.uk`)"
