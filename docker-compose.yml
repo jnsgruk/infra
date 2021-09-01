@@ -112,6 +112,21 @@ services:
       - "traefik.http.routers.bin.tls=true"
     restart: always
 
+  barry:
+    image: ghcr.io/linuxserver/nginx
+    container_name: barry
+    networks:
+      - proxy
+    volumes:
+     - $PWD/data/bestbarry:/config/www
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.barry.rule=Host(`bestbarry.uk`) || Host(`www.bestbarry.uk`)"
+      - "traefik.http.routers.barry.entrypoints=websecure"
+      - "traefik.http.routers.barry.tls.certresolver=myhttpchallenge"
+      - "traefik.http.routers.barry.tls=true"
+    restart: always
+
   nextcloud:
     image: nextcloud:apache
     container_name: nextcloud
@@ -156,7 +171,7 @@ services:
   nextcloud-db:
     image: mariadb
     container_name: nextcloud-db
-    command: --transaction-isolation=READ-COMMITTED --log-bin=mysqld-bin --binlog-format=ROW --innodb=on
+    command: --transaction-isolation=READ-COMMITTED --log-bin=mysqld-bin --binlog-format=ROW --innodb=on --innodb-read-only-compressed=OFF
     networks:
       - nextcloud
     volumes:
