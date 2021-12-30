@@ -76,6 +76,12 @@ Be sure to adjust any reference to `jnsgr.uk` to point to a domain that you cont
 
 If you are not me and do not have access to the encrypted `dotenv` files, the files should contain the following variables as a minimum:
 
+You can source all the variables in a given `.env` file like so:
+
+```bash
+export $(cat env/terraform.env | sed 's/#.*//g' | xargs)
+```
+
 ### env/terraform.env
 
 This file needs to specify two variables:

@@ -36,6 +36,14 @@ resource "digitalocean_record" "jnsgruk-apex" {
   ttl    = 3600
 }
 
+resource "digitalocean_record" "jnsgruk-analytics" {
+  domain = digitalocean_domain.jnsgruk.id
+  type   = "A"
+  name   = "analytics"
+  value  = digitalocean_droplet.droplet_jnsgruk.ipv4_address
+  ttl    = 3600
+}
+
 resource "digitalocean_record" "jnsgruk-bin" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
