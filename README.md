@@ -1,15 +1,18 @@
 # Personal Infrastructure
 
-This repo contains the Infrastructure-as-Code that creates my personal infrastructure using `docker-compose` and `terraform`. It currently manages:
+This repo contains the Infrastructure-as-Code that creates my personal infrastructure using
+`docker-compose` and `terraform`. It currently manages:
 
 - [A DigitalOcean Droplet](./terraform/personal-infra.tf)
 - [A DigitalOcean Firewall](./terraform/personal-infra.tf)
 - DNS Records for my domains:
+  - [bestbarry.uk](./terraform/bestbarry-uk.tf)
+  - [ctrl-elk-del.com](./terraform/dns-ctrl-elk-del-com.tf)
   - [jnsgr.uk](./terraform/dns-jnsgr-uk.tf)
-  - [sgrs.uk](./terraform/dns-sgrs-uk.tf)
   - [jseager.co.uk](./terraform/dns-jseager-co-uk.tf)
   - [jon0.co.uk](./terraform/dns-jon0-co-uk.tf)
-  - [ctrl-elk-del.com](./terraform/dns-ctrl-elk-del-com.tf)
+  - [jviccars.uk](./terraform/jviccars-uk.tf)
+  - [sgrs.uk](./terraform/dns-sgrs-uk.tf)
 
 It also manages the following services on the droplet:
 
@@ -21,7 +24,8 @@ It also manages the following services on the droplet:
 - [jnsgr.uk](https://github.com/jnsgruk/jnsgr.uk)
 - [watchtower](https://github.com/containrrr/watchtower)
 
-Traefik is configured to redirect all domains to `HTTPS`, and all certs are automatically issued from LetsEncrypt (provided the relevant DNS records are in place).
+Traefik is configured to redirect all domains to `HTTPS`, and all certs are automatically issued
+from LetsEncrypt (provided the relevant DNS records are in place).
 
 Secrets are managed using `dotenv` files encrypted with [sops](https://github.com/mozilla/sops).
 
@@ -48,9 +52,11 @@ $ terraform apply
 
 ### Deploying Services
 
-Once the droplet is provisioned, install `docker` and `docker-compose`, preferably using the Ansible Roles in my [dotfiles/provisioning repository](https://jnsgr.uk/dotfiles).
+Once the droplet is provisioned, install `docker` and `docker-compose`, preferably using the
+Ansible Roles in my [dotfiles/provisioning repository](https://jnsgr.uk/dotfiles).
 
-The `docker-compose` file relies upon a number of `dotenv` files, which exist in encrypted form in this repository.
+The `docker-compose` file relies upon a number of `dotenv` files, which exist in encrypted form in
+this repository.
 
 ```bash
 # Clone the repo
@@ -61,7 +67,7 @@ $ ./secrets.sh decrypt
 # Login to the Github Packages Registry (where TOKEN.txt contains a valid Github access token)
 $ cat ~/TOKEN.txt | docker login https://docker.pkg.github.com -u jnsgruk --password-stdin
 # Create the infrastructure
-$ docker-compose --env-file env/compose.yml up -d
+$ docker-compose --env-file env/compose.env up -d
 ```
 
 ---
@@ -70,11 +76,14 @@ $ docker-compose --env-file env/compose.yml up -d
 
 ### Domain Config
 
-Be sure to adjust any reference to `jnsgr.uk` to point to a domain that you control in the [docker-compose.yml](./docker-compose.yml). You'll probably also want to comment out the section that hosts my website...
+Be sure to adjust any reference to `jnsgr.uk` to point to a domain that you control in the
+[docker-compose.yml](./docker-compose.yml). You'll probably also want to comment out the section
+that hosts my website...
 
 ### Env Files
 
-If you are not me and do not have access to the encrypted `dotenv` files, the files should contain the following variables as a minimum:
+If you are not me and do not have access to the encrypted `dotenv` files, the files should contain
+the following variables as a minimum:
 
 You can source all the variables in a given `.env` file like so:
 
@@ -103,7 +112,8 @@ This file needs to specify two variables:
 
 ### env/nextcloud.env
 
-Where variables are not required here, it is usually because the values can be configured in the first setup wizard for Nextcloud.
+Where variables are not required here, it is usually because the values can be configured in the
+first setup wizard for Nextcloud.
 
 | Name                        | Required | Notes                                                                                                       |
 | :-------------------------- | :------: | :---------------------------------------------------------------------------------------------------------- |
@@ -129,3 +139,14 @@ Where variables are not required here, it is usually because the values can be c
 | `MYSQL_USER`          |   Yes    | Set to desired username to connect to MariaDB with |
 | `MYSQL_PASSWORD`      |   Yes    | Set to desired password to connect to MariaDB with |
 | `MYSQL_DATABASE`      |   Yes    | Name of database to create                         |
+
+### env/plausible.env
+
+| Name                | Required | Notes                                                                   |
+| :------------------ | :------: | :---------------------------------------------------------------------- |
+| `ADMIN_USER_EMAIL`  |    No    | Set to desired email address for Plausible admin user                   |
+| `ADMIN_USER_NAME`   |    No    | Set to desired username for Plausible admin user                        |
+| `ADMIN_USER_PWD`    |    No    | Set to desired password for Plausible admin user                        |
+| `BASE_URL`          |   Yes    | Set to base URL for Plausible deployment when used with a reverse proxy |
+| `SECRET_KEY_BASE`   |   Yes    | An internal secret key used by Phoenix Framework                        |
+| `POSTGRES_PASSWORD` |   Yes    | Password for the Postgres database used by Plausible                    |
