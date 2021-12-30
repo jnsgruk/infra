@@ -194,6 +194,7 @@ services:
 
   mail:
     image: bytemark/smtp
+    container_name: plausible-mail
     restart: always
     networks:
       - plausible
@@ -201,6 +202,7 @@ services:
   plausible_db:
     image: postgres:12
     restart: always
+    container_name: plausible-db
     networks:
       - plausible
     volumes:
@@ -211,6 +213,7 @@ services:
   plausible_events_db:
     image: yandex/clickhouse-server:21.3.2.5
     restart: always
+    container_name: plausible-events-db
     networks:
       - plausible
     volumes:
@@ -224,6 +227,7 @@ services:
 
   plausible:
     image: plausible/analytics:latest
+    container_name: plausible
     restart: always
     networks:
       - plausible
