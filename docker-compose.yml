@@ -63,7 +63,7 @@ services:
     restart: always
 
   jnsgruk:
-    image: docker.pkg.github.com/jnsgruk/jnsgr.uk/jnsgr.uk:0.4
+    image: docker.pkg.github.com/jnsgruk/jnsgr.uk/jnsgr.uk:0.5
     container_name: jnsgruk
     environment:
       WEBROOT: ./public
