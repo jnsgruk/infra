@@ -207,9 +207,8 @@ services:
       - plausible
     volumes:
       - $PWD/data/plausible/postgres/db-data:/var/lib/postgresql/data
-    # Used when bootstrapping the infrastructure. Do not leave uncommented in production
-    # env_file:
-    #   - $PWD/env/plausible.env
+    env_file:
+      - $PWD/env/plausible.env
 
   plausible-events-db:
     image: yandex/clickhouse-server:21.3.2.5
@@ -240,6 +239,7 @@ services:
       - plausible-mail
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=infra_proxy"
       - "traefik.http.routers.analytics.rule=Host(`analytics.jnsgr.uk`)"
       - "traefik.http.routers.analytics.entrypoints=websecure"
       - "traefik.http.routers.analytics.tls.certresolver=myhttpchallenge"
@@ -247,8 +247,8 @@ services:
     ports:
       - 8000:8000
     # Used when bootstrapping the infrastructure. Do not leave uncommented in production
-    # env_file:
-    #   - $PWD/env/plausible.env
+    env_file:
+      - $PWD/env/plausible.env
 
   # onlyoffice:
   #   image: onlyoffice/documentserver:latest
