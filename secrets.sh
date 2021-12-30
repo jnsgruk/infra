@@ -17,7 +17,7 @@ main() {
   # Parse first argument to script
   if [[ "${1:-}" == "encrypt" ]]; then
     # If encrypt - then loop over the files we want to encrypt
-    for i in nextcloud mariadb compose terraform; do
+    for i in nextcloud mariadb compose terraform plausible; do
       info "Encrypting env/$i.env => env/$i.enc.env"
       sops --encrypt --azure-kv "${SOPS_KEY_ID}" "${DIR}/env/${i}.env" > "${DIR}/env/${i}.enc.env"
     done
