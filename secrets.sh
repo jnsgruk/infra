@@ -23,7 +23,7 @@ main() {
     done
   elif [[ "${1:-}" == "decrypt" ]]; then
     # If decrypt - then loop over the files we want to encrypt
-    for i in nextcloud mariadb compose terraform; do
+    for i in nextcloud mariadb compose terraform plausible; do
       info "Decrypting env/$i.enc.env => env/$i.env"
       sops --decrypt --azure-kv "${SOPS_KEY_ID}" "${DIR}/env/${i}.enc.env" > "${DIR}/env/${i}.env"
     done
