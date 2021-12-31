@@ -78,6 +78,22 @@ services:
       - "traefik.http.routers.jnsgruk.tls.certresolver=myhttpchallenge"
     restart: unless-stopped
 
+  jviccars:
+    image: jnsgruk/jviccars.uk:latest
+    container_name: jviccars
+    environment:
+      WEBROOT: ./public
+      REDIRECT_MAP_URL: https://gist.githubusercontent.com/jnsgruk/aaf8102a904788d5ecfcbdcea9409922/raw
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jviccars.rule=Host(`jviccars.uk`) || Host(`www.jviccars.uk`)"
+      - "traefik.http.routers.jviccars.entrypoints=websecure"
+      - "traefik.http.routers.jviccars.tls=true"
+      - "traefik.http.routers.jviccars.tls.certresolver=myhttpchallenge"
+    restart: unless-stopped
+
   lounge:
     image: ghcr.io/linuxserver/thelounge
     container_name: thelounge
@@ -231,8 +247,8 @@ services:
       - plausible
       - proxy
     # Used when bootstrapping the infrastructure. Do not leave uncommented in production
-    command: sh -c "sleep 10 && /entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh db init-admin && /entrypoint.sh run"
-    # command: sh -c "sleep 10 && /entrypoint.sh db migrate && /entrypoint.sh db init-admin && /entrypoint.sh run"
+    # command: sh -c "sleep 10 && /entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh db init-admin && /entrypoint.sh run"
+    command: sh -c "sleep 10 && /entrypoint.sh db migrate && /entrypoint.sh db init-admin && /entrypoint.sh run"
     depends_on:
       - plausible-db
       - plausible-events-db
@@ -246,7 +262,6 @@ services:
       - "traefik.http.routers.stats.tls=true"
     ports:
       - 8000:8000
-    # Used when bootstrapping the infrastructure. Do not leave uncommented in production
     env_file:
       - $PWD/env/plausible.env
 
