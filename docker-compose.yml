@@ -1,4 +1,4 @@
-version: "3"
+version: "3.2"
 
 networks:
   proxy:
@@ -218,8 +218,6 @@ services:
       - plausible
     volumes:
       - $PWD/data/plausible/clickhouse/event-data:/var/lib/clickhouse
-      - $PWD/data/plausible/clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro
-      - $PWD/data/plausible/clickhouse/clickhouse-user-config.xml:/etc/clickhouse-server/users.d/logging.xml:ro
     ulimits:
       nofile:
         soft: 262144
@@ -232,7 +230,9 @@ services:
     networks:
       - plausible
       - proxy
+    # Used when bootstrapping the infrastructure. Do not leave uncommented in production
     command: sh -c "sleep 10 && /entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh db init-admin && /entrypoint.sh run"
+    # command: sh -c "sleep 10 && /entrypoint.sh db migrate && /entrypoint.sh db init-admin && /entrypoint.sh run"
     depends_on:
       - plausible-db
       - plausible-events-db
@@ -240,10 +240,10 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=infra_proxy"
-      - "traefik.http.routers.analytics.rule=Host(`analytics.jnsgr.uk`)"
-      - "traefik.http.routers.analytics.entrypoints=websecure"
-      - "traefik.http.routers.analytics.tls.certresolver=myhttpchallenge"
-      - "traefik.http.routers.analytics.tls=true"
+      - "traefik.http.routers.stats.rule=Host(`stats.jnsgr.uk`)"
+      - "traefik.http.routers.stats.entrypoints=websecure"
+      - "traefik.http.routers.stats.tls.certresolver=myhttpchallenge"
+      - "traefik.http.routers.stats.tls=true"
     ports:
       - 8000:8000
     # Used when bootstrapping the infrastructure. Do not leave uncommented in production
