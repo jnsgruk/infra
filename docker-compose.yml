@@ -263,8 +263,6 @@ services:
       - "traefik.http.middlewares.plausible-stats-script.replacepathregex.regex=^/ping"
       - "traefik.http.middlewares.plausible-stats-script.replacepathregex.replacement=/js/plausible.js"
       - "traefik.http.routers.stats.middlewares=plausible-stats-script@docker"
-    ports:
-      - 8000:8000
     env_file:
       - $PWD/env/plausible.env
 
