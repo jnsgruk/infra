@@ -94,40 +94,40 @@ services:
       - "traefik.http.routers.jviccars.tls.certresolver=myhttpchallenge"
     restart: unless-stopped
 
-  lounge:
-    image: ghcr.io/linuxserver/thelounge
-    container_name: thelounge
-    networks:
-      - proxy
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-    volumes:
-      - $PWD/data/thelounge:/config
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.thelounge.rule=Host(`irc.jnsgr.uk`)"
-      - "traefik.http.routers.thelounge.entrypoints=websecure"
-      - "traefik.http.routers.thelounge.tls.certresolver=myhttpchallenge"
-      - "traefik.http.routers.thelounge.tls=true"
-    restart: always
+  #lounge:
+  #  image: ghcr.io/linuxserver/thelounge
+  #  container_name: thelounge
+  #  networks:
+  #    - proxy
+  #  environment:
+  #    - PUID=1000
+  #    - PGID=1000
+  #    - TZ=Europe/London
+  #  volumes:
+  #    - $PWD/data/thelounge:/config
+  #  labels:
+  #    - "traefik.enable=true"
+  #    - "traefik.http.routers.thelounge.rule=Host(`irc.jnsgr.uk`)"
+  #    - "traefik.http.routers.thelounge.entrypoints=websecure"
+  #    - "traefik.http.routers.thelounge.tls.certresolver=myhttpchallenge"
+  #    - "traefik.http.routers.thelounge.tls=true"
+  #  restart: always
 
-  bin:
-    build:
-      context: .
-      dockerfile: dockerfiles/bin.dockerfile
-    image: jnsgruk/bin:latest
-    container_name: bin
-    networks:
-      - proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.bin.rule=Host(`bin.jnsgr.uk`)"
-      - "traefik.http.routers.bin.entrypoints=websecure"
-      - "traefik.http.routers.bin.tls.certresolver=myhttpchallenge"
-      - "traefik.http.routers.bin.tls=true"
-    restart: always
+  #bin:
+  #  build:
+  #    context: .
+  #    dockerfile: dockerfiles/bin.dockerfile
+  #  image: jnsgruk/bin:latest
+  #  container_name: bin
+  #  networks:
+  #    - proxy
+  #  labels:
+  #    - "traefik.enable=true"
+  #    - "traefik.http.routers.bin.rule=Host(`bin.jnsgr.uk`)"
+  #    - "traefik.http.routers.bin.entrypoints=websecure"
+  #    - "traefik.http.routers.bin.tls.certresolver=myhttpchallenge"
+  #    - "traefik.http.routers.bin.tls=true"
+  #  restart: always
 
   barry:
     image: jnsgruk/bestbarry:latest
