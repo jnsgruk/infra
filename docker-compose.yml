@@ -21,22 +21,22 @@ services:
     profiles: ["core"]
 
   traefik:
-    image: traefik:v2.3.5
+    image: traefik:v2.6.1
     container_name: traefik
     ports:
       - 80:80
       - 443:443
     depends_on:
       - socket-proxy
-    entrypoint:
-      - /entrypoint-shim.sh
+    # entrypoint:
+    #   - /entrypoint-shim.sh
     command:
       - "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.endpoint=tcp://socket-proxy:2375"
       - "--providers.docker.network=proxy"
       - "--providers.docker.exposedbydefault=false"
-      - "--providers.file.filename=/etc/traefik/config.yml"
+      # - "--providers.file.filename=/etc/traefik/config.yml"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
@@ -55,8 +55,8 @@ services:
       - "traefik.http.routers.traefik.tls=true"
       - "traefik.http.routers.traefik.service=api@internal"
     volumes:
-      - $PWD/traefik/entrypoint-shim.sh:/entrypoint-shim.sh
-      - $PWD/traefik/config.yml:/etc/traefik/config.yml
+      # - $PWD/traefik/entrypoint-shim.sh:/entrypoint-shim.sh
+      # - $PWD/traefik/config.yml:/etc/traefik/config.yml
       - $PWD/data/traefik/letsencrypt:/letsencrypt
     networks:
       - proxy
@@ -119,10 +119,10 @@ services:
     profiles: ["lounge"]
 
   bin:
-    build:
-      context: .
-      dockerfile: dockerfiles/bin.dockerfile
-    image: jnsgruk/bin:latest
+    # build:
+    #   context: .
+    #   dockerfile: dockerfiles/bin.dockerfile
+    image: jnsgruk/bin:v2.0.0
     container_name: bin
     networks:
       - proxy
@@ -281,17 +281,18 @@ services:
       - $PWD/env/plausible.env
     profiles: ["plausible"]
 
-  # onlyoffice:
-  #   image: onlyoffice/documentserver:latest
-  #   container_name: onlyoffice
-  #   networks:
-  #     - proxy
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.onlyoffice.rule=Host(`office.jnsgr.uk`)"
-  #     - "traefik.http.routers.onlyoffice.entrypoints=websecure"
-  #     - "traefik.http.routers.onlyoffice.tls.certresolver=myhttpchallenge"
-  #     - "traefik.http.routers.onlyoffice.tls=true"
-  #     - "traefik.http.routers.onlyoffice.middlewares=onlyoffice-headers@docker"
-  #     - "traefik.http.middlewares.onlyoffice-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
-  #   restart: always
+  onlyoffice:
+    image: onlyoffice/documentserver:latest
+    container_name: onlyoffice
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.onlyoffice.rule=Host(`office.jnsgr.uk`)"
+      - "traefik.http.routers.onlyoffice.entrypoints=websecure"
+      - "traefik.http.routers.onlyoffice.tls.certresolver=myhttpchallenge"
+      - "traefik.http.routers.onlyoffice.tls=true"
+      - "traefik.http.routers.onlyoffice.middlewares=onlyoffice-headers@docker"
+      - "traefik.http.middlewares.onlyoffice-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+    restart: always
+    profiles: ["onlyoffice"]

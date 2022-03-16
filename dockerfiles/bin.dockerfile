@@ -1,8 +1,17 @@
-FROM alpine:latest
-ENV TAG=v1.0.3
-RUN cd /usr/local/bin && \
-  wget -qO - https://github.com/w4/bin/releases/download/$TAG/bin-$TAG-x86_64-unknown-linux-musl.tar.gz | tar xvz
-RUN adduser --system --uid 8000 --disabled-password --no-create-home binuser
-USER binuser
+FROM rust:1-slim AS builder
+ARG TAG="v2.0.0"
+
+RUN apt-get update && \
+    apt-get install -y libclang-dev git && \
+    git clone -b "$TAG" https://github.com/w4/bin /tmp/bin
+
+WORKDIR /tmp/bin
+
+RUN cargo build --release && \
+    chown nobody:nogroup /tmp/bin/target/release/bin
+
+FROM debian:bullseye-slim
+COPY --from=builder /tmp/bin/target/release/bin /pastebin
+USER nobody
 EXPOSE 8000
-ENTRYPOINT ["/usr/local/bin/bin"]
+ENTRYPOINT ["/pastebin", "0.0.0.0:8000"]
