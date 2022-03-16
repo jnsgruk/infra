@@ -18,6 +18,7 @@ services:
     networks:
       - socket_proxy
     restart: always
+    profiles: ["core"]
 
   traefik:
     image: traefik:v2.3.5
@@ -61,6 +62,7 @@ services:
       - proxy
       - socket_proxy
     restart: always
+    profiles: ["core"]
 
   jnsgruk:
     image: jnsgruk/jnsgr.uk:latest
@@ -77,6 +79,7 @@ services:
       - "traefik.http.routers.jnsgruk.tls=true"
       - "traefik.http.routers.jnsgruk.tls.certresolver=myhttpchallenge"
     restart: unless-stopped
+    profiles: ["jnsgruk"]
 
   jviccars:
     image: jnsgruk/jviccars.uk:latest
@@ -93,41 +96,44 @@ services:
       - "traefik.http.routers.jviccars.tls=true"
       - "traefik.http.routers.jviccars.tls.certresolver=myhttpchallenge"
     restart: unless-stopped
+    profiles: ["jviccars"]
 
-  #lounge:
-  #  image: ghcr.io/linuxserver/thelounge
-  #  container_name: thelounge
-  #  networks:
-  #    - proxy
-  #  environment:
-  #    - PUID=1000
-  #    - PGID=1000
-  #    - TZ=Europe/London
-  #  volumes:
-  #    - $PWD/data/thelounge:/config
-  #  labels:
-  #    - "traefik.enable=true"
-  #    - "traefik.http.routers.thelounge.rule=Host(`irc.jnsgr.uk`)"
-  #    - "traefik.http.routers.thelounge.entrypoints=websecure"
-  #    - "traefik.http.routers.thelounge.tls.certresolver=myhttpchallenge"
-  #    - "traefik.http.routers.thelounge.tls=true"
-  #  restart: always
+  lounge:
+    image: ghcr.io/linuxserver/thelounge
+    container_name: thelounge
+    networks:
+      - proxy
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - $PWD/data/thelounge:/config
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.thelounge.rule=Host(`irc.jnsgr.uk`)"
+      - "traefik.http.routers.thelounge.entrypoints=websecure"
+      - "traefik.http.routers.thelounge.tls.certresolver=myhttpchallenge"
+      - "traefik.http.routers.thelounge.tls=true"
+    restart: always
+    profiles: ["lounge"]
 
-  #bin:
-  #  build:
-  #    context: .
-  #    dockerfile: dockerfiles/bin.dockerfile
-  #  image: jnsgruk/bin:latest
-  #  container_name: bin
-  #  networks:
-  #    - proxy
-  #  labels:
-  #    - "traefik.enable=true"
-  #    - "traefik.http.routers.bin.rule=Host(`bin.jnsgr.uk`)"
-  #    - "traefik.http.routers.bin.entrypoints=websecure"
-  #    - "traefik.http.routers.bin.tls.certresolver=myhttpchallenge"
-  #    - "traefik.http.routers.bin.tls=true"
-  #  restart: always
+  bin:
+    build:
+      context: .
+      dockerfile: dockerfiles/bin.dockerfile
+    image: jnsgruk/bin:latest
+    container_name: bin
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bin.rule=Host(`bin.jnsgr.uk`)"
+      - "traefik.http.routers.bin.entrypoints=websecure"
+      - "traefik.http.routers.bin.tls.certresolver=myhttpchallenge"
+      - "traefik.http.routers.bin.tls=true"
+    restart: always
+    profiles: ["bin"]
 
   barry:
     image: jnsgruk/bestbarry:latest
@@ -141,6 +147,7 @@ services:
       - "traefik.http.routers.barry.tls.certresolver=myhttpchallenge"
       - "traefik.http.routers.barry.tls=true"
     restart: always
+    profiles: ["barry"]
 
   nextcloud:
     image: nextcloud:apache
@@ -174,6 +181,7 @@ services:
     # Used when bootstrapping the infrastructure. Do not leave uncommented in production
     # env_file:
     #   - $PWD/env/nextcloud.env
+    profiles: ["nextcloud"]
 
   nextcloud-redis:
     image: redis
@@ -182,6 +190,7 @@ services:
     restart: always
     networks:
       - nextcloud
+    profiles: ["nextcloud"]
 
   nextcloud-db:
     image: mariadb
@@ -196,6 +205,7 @@ services:
     # Used when bootstrapping the infrastructure. Do not leave uncommented in production
     # env_file:
     #   - $PWD/env/mariadb.env
+    profiles: ["nextcloud"]
 
   watchtower:
     image: containrrr/watchtower
@@ -207,6 +217,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
+    profiles: ["core"]
 
   plausible-mail:
     image: bytemark/smtp
@@ -214,6 +225,7 @@ services:
     restart: always
     networks:
       - plausible
+    profiles: ["plausible"]
 
   plausible-db:
     image: postgres:12
@@ -225,6 +237,7 @@ services:
       - $PWD/data/plausible/postgres/db-data:/var/lib/postgresql/data
     env_file:
       - $PWD/env/plausible.env
+    profiles: ["plausible"]
 
   plausible-events-db:
     image: yandex/clickhouse-server:21.3.2.5
@@ -238,6 +251,7 @@ services:
       nofile:
         soft: 262144
         hard: 262144
+    profiles: ["plausible"]
 
   plausible:
     image: plausible/analytics:latest
@@ -265,6 +279,7 @@ services:
       - "traefik.http.routers.stats.middlewares=plausible-stats-script@docker"
     env_file:
       - $PWD/env/plausible.env
+    profiles: ["plausible"]
 
   # onlyoffice:
   #   image: onlyoffice/documentserver:latest
