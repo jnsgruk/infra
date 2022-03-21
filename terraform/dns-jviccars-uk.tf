@@ -26,32 +26,6 @@ resource "digitalocean_record" "jviccarsuk-ns3" {
   ttl    = 1800
 }
 
-# A Records
-
-resource "digitalocean_record" "jviccarsuk-apex" {
-  domain = digitalocean_domain.jviccarsuk.id
-  type   = "A"
-  name   = "@"
-  value  = digitalocean_droplet.droplet_jnsgruk.ipv4_address
-  ttl    = 3600
-}
-
-resource "digitalocean_record" "jviccarsuk-www" {
-  domain = digitalocean_domain.jviccarsuk.id
-  type   = "A"
-  name   = "www"
-  value  = digitalocean_droplet.droplet_jnsgruk.ipv4_address
-  ttl    = 3600
-}
-
-resource "digitalocean_record" "jviccarsuk-staging" {
-  domain = digitalocean_domain.jviccarsuk.id
-  type   = "A"
-  name   = "staging"
-  value  = digitalocean_droplet.droplet_jnsgruk.ipv4_address
-  ttl    = 3600
-}
-
 # CNAME Records
 
 resource "digitalocean_record" "jviccarsuk-dkim1" {

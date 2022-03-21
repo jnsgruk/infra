@@ -17,10 +17,6 @@ This repo contains the Infrastructure-as-Code that creates my personal infrastru
 It also manages the following services on the droplet:
 
 - [traefik](https://traefik.io)
-- [nextcloud](https://nextcloud.com/) (backed by mariadb & redis)
-- [onlyoffice](https://hub.docker.com/r/onlyoffice/documentserver/)
-- [bin](https://github.com/w4/bin)
-- [the lounge](https://thelounge.chat/)
 - [jnsgr.uk](https://github.com/jnsgruk/jnsgr.uk)
 - [watchtower](https://github.com/containrrr/watchtower)
 
@@ -104,49 +100,6 @@ This file needs to specify two variables:
 
 This file needs to specify two variables:
 
-| Name                  | Required | Notes                                                                          |
-| :-------------------- | :------: | :----------------------------------------------------------------------------- |
-| `EMAIL`               |   Yes    | Email address used when requesting LetsEncrypt certs                           |
-| `ADMIN_USER`          |   Yes    | Format is `username:pw_hash`, generated with: `htpasswd -nb username password` |
-| `REDIS_HOST_PASSWORD` |   Yes    | Password for Redis instance that backs Nextcloud for file locking              |
-
-### env/nextcloud.env
-
-Where variables are not required here, it is usually because the values can be configured in the
-first setup wizard for Nextcloud.
-
-| Name                        | Required | Notes                                                                                                       |
-| :-------------------------- | :------: | :---------------------------------------------------------------------------------------------------------- |
-| `NEXTCLOUD_ADMIN_USER`      |    No    | Admin username for Nextcloud instance                                                                       |
-| `NEXTCLOUD_ADMIN_PASSWORD`  |    No    | Admin password for Nextcloud instance                                                                       |
-| `NEXTCLOUD_TRUSTED_DOMAINS` |    No    | Space separated list of domains for Nextcloud to trust. Set this to the domain name you're deploying to     |
-| `TRUSTED_PROXIES`           |   Yes    | Set this to `traefik` in most instances                                                                     |
-| `OVERWRITE_PROTOCOL`        |    No    | Set this to `https` in most instances                                                                       |
-| `OVERWRITE_HOST`            |    No    | Set this to the deployment domain in most instances                                                         |
-| `MYSQL_HOST`                |    No    | Set this to `nextcloud-db` in most instance, unless deploying your database by another means than this repo |
-| `MYSQL_USER`                |    No    | Username to connect to MariaDB with                                                                         |
-| `MYSQL_PASSWORD`            |    No    | Password to connect to MariaDB with                                                                         |
-| `MYSQL_DATABASE`            |    No    | Name of database to connect to                                                                              |
-| `REDIS_HOST`                |   Yes    | Set this to `nextcloud-redis` unless deploying Redis elsewhere                                              |
-| `REDIS_HOST_PORT`           |   Yes    | Set this to `6379` unless deploying Redis elsewhere                                                         |
-| `REDIS_HOST_PASSWORD`       |   Yes    | Password for Redis instance, specified in `env/compose.env`                                                 |
-
-### env/mariadb.env
-
-| Name                  | Required | Notes                                              |
-| :-------------------- | :------: | :------------------------------------------------- |
-| `MYSQL_ROOT_PASSWORD` |   Yes    | Set to desired root password for MariaDB           |
-| `MYSQL_USER`          |   Yes    | Set to desired username to connect to MariaDB with |
-| `MYSQL_PASSWORD`      |   Yes    | Set to desired password to connect to MariaDB with |
-| `MYSQL_DATABASE`      |   Yes    | Name of database to create                         |
-
-### env/plausible.env
-
-| Name                | Required | Notes                                                                   |
-| :------------------ | :------: | :---------------------------------------------------------------------- |
-| `ADMIN_USER_EMAIL`  |    No    | Set to desired email address for Plausible admin user                   |
-| `ADMIN_USER_NAME`   |    No    | Set to desired username for Plausible admin user                        |
-| `ADMIN_USER_PWD`    |    No    | Set to desired password for Plausible admin user                        |
-| `BASE_URL`          |   Yes    | Set to base URL for Plausible deployment when used with a reverse proxy |
-| `SECRET_KEY_BASE`   |   Yes    | An internal secret key used by Phoenix Framework                        |
-| `POSTGRES_PASSWORD` |   Yes    | Password for the Postgres database used by Plausible                    |
+| Name    | Required | Notes                                                |
+| :------ | :------: | :--------------------------------------------------- |
+| `EMAIL` |   Yes    | Email address used when requesting LetsEncrypt certs |

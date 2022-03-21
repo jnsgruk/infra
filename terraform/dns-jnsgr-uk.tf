@@ -36,46 +36,6 @@ resource "digitalocean_record" "jnsgruk-apex" {
   ttl    = 3600
 }
 
-resource "digitalocean_record" "jnsgruk-stats" {
-  domain = digitalocean_domain.jnsgruk.id
-  type   = "A"
-  name   = "stats"
-  value  = digitalocean_droplet.droplet_jnsgruk.ipv4_address
-  ttl    = 3600
-}
-
-resource "digitalocean_record" "jnsgruk-bin" {
-  domain = digitalocean_domain.jnsgruk.id
-  type   = "A"
-  name   = "bin"
-  value  = digitalocean_droplet.droplet_jnsgruk.ipv4_address
-  ttl    = 3600
-}
-
-resource "digitalocean_record" "jnsgruk-cloud" {
-  domain = digitalocean_domain.jnsgruk.id
-  type   = "A"
-  name   = "cloud"
-  value  = digitalocean_droplet.droplet_jnsgruk.ipv4_address
-  ttl    = 3600
-}
-
-resource "digitalocean_record" "jnsgruk-irc" {
-  domain = digitalocean_domain.jnsgruk.id
-  type   = "A"
-  name   = "irc"
-  value  = digitalocean_droplet.droplet_jnsgruk.ipv4_address
-  ttl    = 3600
-}
-
-resource "digitalocean_record" "jnsgruk-monitor" {
-  domain = digitalocean_domain.jnsgruk.id
-  type   = "A"
-  name   = "monitor"
-  value  = digitalocean_droplet.droplet_jnsgruk.ipv4_address
-  ttl    = 3600
-}
-
 resource "digitalocean_record" "jnsgruk-wg" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
@@ -89,6 +49,30 @@ resource "digitalocean_record" "jnsgruk-www" {
   type   = "A"
   name   = "www"
   value  = digitalocean_droplet.droplet_jnsgruk.ipv4_address
+  ttl    = 3600
+}
+
+resource "digitalocean_record" "jnsgruk-backup" {
+  domain = digitalocean_domain.jnsgruk.id
+  type   = "A"
+  name   = "backup"
+  value  = "10.28.0.6"
+  ttl    = 3600
+}
+
+resource "digitalocean_record" "jnsgruk-files" {
+  domain = digitalocean_domain.jnsgruk.id
+  type   = "A"
+  name   = "files"
+  value  = "10.28.0.6"
+  ttl    = 3600
+}
+
+resource "digitalocean_record" "jnsgruk-sync" {
+  domain = digitalocean_domain.jnsgruk.id
+  type   = "A"
+  name   = "*.sync"
+  value  = "10.28.0.6"
   ttl    = 3600
 }
 
