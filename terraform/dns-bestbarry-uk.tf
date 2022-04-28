@@ -32,7 +32,7 @@ resource "digitalocean_record" "bestbarry-apex" {
   domain = digitalocean_domain.bestbarry.id
   type   = "A"
   name   = "@"
-  value  = digitalocean_droplet.droplet_jnsgruk.ipv4_address
+  value  = digitalocean_droplet.droplet_jnsgruk_micro.ipv4_address
   ttl    = 3600
 }
 
@@ -40,6 +40,6 @@ resource "digitalocean_record" "bestbarry-www" {
   domain = digitalocean_domain.bestbarry.id
   type   = "A"
   name   = "www"
-  value  = digitalocean_droplet.droplet_jnsgruk.ipv4_address
+  value  = digitalocean_droplet.droplet_jnsgruk_micro.ipv4_address
   ttl    = 3600
 }

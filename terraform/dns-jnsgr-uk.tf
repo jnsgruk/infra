@@ -32,7 +32,7 @@ resource "digitalocean_record" "jnsgruk-apex" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
   name   = "@"
-  value  = digitalocean_droplet.droplet_jnsgruk.ipv4_address
+  value  = digitalocean_droplet.droplet_jnsgruk_micro.ipv4_address
   ttl    = 3600
 }
 
@@ -40,7 +40,7 @@ resource "digitalocean_record" "jnsgruk-wg" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
   name   = "wg"
-  value  = digitalocean_droplet.droplet_jnsgruk.ipv4_address
+  value  = digitalocean_droplet.droplet_jnsgruk_micro.ipv4_address
   ttl    = 3600
 }
 
@@ -48,7 +48,7 @@ resource "digitalocean_record" "jnsgruk-www" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
   name   = "www"
-  value  = digitalocean_droplet.droplet_jnsgruk.ipv4_address
+  value  = digitalocean_droplet.droplet_jnsgruk_micro.ipv4_address
   ttl    = 3600
 }
 
