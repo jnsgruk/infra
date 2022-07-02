@@ -1,12 +1,4 @@
-env/mariadb.env
-env/nextcloud.env
-env/compose.env
-env/terraform.env
-env/plausible.env
-
-sops.env
-
+.env
 data/
-
 terraform/.terraform
 terraform/.terraform.lock.hcl

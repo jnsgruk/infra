@@ -1,10 +1,13 @@
-version: "3.2"
+version: "3.4"
 
 networks:
   proxy:
   socket_proxy:
 
 services:
+  #
+  # Common Services
+  #
   socket-proxy:
     image: tecnativa/docker-socket-proxy
     container_name: socket-proxy
@@ -16,10 +19,25 @@ services:
     networks:
       - socket_proxy
     restart: always
-    profiles: ["core"]
+    profiles: ["fitlet", "droplet"]
 
-  traefik:
-    image: traefik:v2.6.1
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_DEBUG=true
+      - WATCHTOWER_SCHEDULE=0 0 2 * * *
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    profiles: ["fitlet", "droplet"]
+
+  #
+  # Droplet Services
+  #
+  traefik-droplet:
+    image: traefik:v2.8.0
     container_name: traefik
     ports:
       - 80:80
@@ -32,12 +50,12 @@ services:
       - "--providers.docker.network=proxy"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.le.acme.httpchallenge=true"
-      - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.le.acme.email=$EMAIL"
+      - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
     volumes:
       - $PWD/data/traefik/letsencrypt:/letsencrypt
@@ -45,7 +63,7 @@ services:
       - proxy
       - socket_proxy
     restart: always
-    profiles: ["core"]
+    profiles: ["droplet"]
 
   jnsgruk:
     image: jnsgruk/jnsgr.uk:latest
@@ -57,12 +75,12 @@ services:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.jnsgruk.rule=Host(`jnsgr.uk`) || Host(`www.jnsgr.uk`)"
       - "traefik.http.routers.jnsgruk.entrypoints=websecure"
       - "traefik.http.routers.jnsgruk.tls=true"
       - "traefik.http.routers.jnsgruk.tls.certresolver=le"
+      - "traefik.http.routers.jnsgruk.rule=Host(`jnsgr.uk`) || Host(`www.jnsgr.uk`)"
     restart: unless-stopped
-    profiles: ["jnsgruk"]
+    profiles: ["droplet"]
 
   barry:
     image: jnsgruk/bestbarry:latest
@@ -71,21 +89,110 @@ services:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.barry.rule=Host(`bestbarry.uk`) || Host(`www.bestbarry.uk`)"
       - "traefik.http.routers.barry.entrypoints=websecure"
-      - "traefik.http.routers.barry.tls.certresolver=le"
       - "traefik.http.routers.barry.tls=true"
+      - "traefik.http.routers.barry.tls.certresolver=le"
+      - "traefik.http.routers.barry.rule=Host(`bestbarry.uk`) || Host(`www.bestbarry.uk`)"
     restart: always
-    profiles: ["barry"]
+    profiles: ["droplet"]
 
-  watchtower:
-    image: containrrr/watchtower
-    container_name: watchtower
-    environment:
-      - WATCHTOWER_CLEANUP=true
-      - WATCHTOWER_DEBUG=true
-      - WATCHTOWER_SCHEDULE=0 0 2 * * *
+  #
+  # Fitlet Services
+  #
+  traefik-fitlet:
+    image: traefik:v2.8.0
+    container_name: traefik
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - socket-proxy
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.endpoint=tcp://socket-proxy:2375"
+      - "--providers.docker.network=proxy"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.file.filename=/etc/traefik/config.yml"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--certificatesresolvers.le.acme.email=$EMAIL"
+      - "--certificatesresolvers.le.acme.dnschallenge=true"
+      - "--certificatesresolvers.le.acme.dnschallenge.provider=digitalocean"
+      - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - $FITLET_APPS_ROOT/data/traefik/letsencrypt:/letsencrypt
+      - $FITLET_APPS_ROOT/data/traefik/config.yml:/etc/traefik/config.yml
+    networks:
+      - proxy
+      - socket_proxy
     restart: always
-    profiles: ["core"]
+    profiles: ["fitlet"]
+
+  duplicati:
+    image: lscr.io/linuxserver/duplicati
+    container_name: duplicati
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.duplicati.entrypoints=websecure"
+      - "traefik.http.routers.duplicati.tls=true"
+      - "traefik.http.routers.duplicati.tls.certresolver=le"
+      - "traefik.http.routers.duplicati.rule=Host(`backup.jnsgr.uk`)"
+    volumes:
+      - $FITLET_APPS_ROOT/data/duplicati:/config
+      - /media/crucial:/source
+    ports:
+      - 8200:8200
+    restart: unless-stopped
+    networks: ["proxy"]
+    profiles: ["fitlet"]
+
+  syncthing:
+    image: lscr.io/linuxserver/syncthing
+    container_name: syncthing
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.syncthing.entrypoints=websecure"
+      - "traefik.http.routers.syncthing.tls=true"
+      - "traefik.http.routers.syncthing.tls.certresolver=le"
+      - "traefik.http.routers.syncthing.rule=Host(`fitlet.sync.jnsgr.uk`)"
+    volumes:
+      - $FITLET_APPS_ROOT/data/syncthing:/config
+      - $FITLET_DATA_ROOT:/data1
+    ports:
+      - 8384:8384
+      - 22000:22000/tcp
+      - 22000:22000/udp
+      - 21027:21027/udp
+    restart: unless-stopped
+    networks: ["proxy"]
+    profiles: ["fitlet"]
+
+  nginx:
+    image: lscr.io/linuxserver/nginx
+    container_name: nginx
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.files.entrypoints=websecure"
+      - "traefik.http.routers.files.tls=true"
+      - "traefik.http.routers.files.tls.certresolver=le"
+      - "traefik.http.routers.files.rule=Host(`files.jnsgr.uk`)"
+    volumes:
+      - $FITLET_APPS_ROOT/data/files-app:/config
+      - $FITLET_DATA_ROOT:/data
+    restart: unless-stopped
+    networks: ["proxy"]
+    profiles: ["fitlet"]
