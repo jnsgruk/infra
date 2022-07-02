@@ -145,7 +145,7 @@ services:
       - "traefik.http.routers.duplicati.rule=Host(`backup.jnsgr.uk`)"
     volumes:
       - $FITLET_APPS_ROOT/data/duplicati:/config
-      - /media/crucial:/source
+      - $FITLET_DATA_ROOT:/source
     ports:
       - 8200:8200
     restart: unless-stopped
