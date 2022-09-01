@@ -19,7 +19,7 @@ services:
     networks:
       - socket_proxy
     restart: always
-    profiles: ["fitlet", "droplet"]
+    profiles: ["fitlet"]
 
   watchtower:
     image: containrrr/watchtower
@@ -31,70 +31,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
-    profiles: ["fitlet", "droplet"]
-
-  #
-  # Droplet Services
-  #
-  traefik-droplet:
-    image: traefik:v2.8.0
-    container_name: traefik
-    ports:
-      - 80:80
-      - 443:443
-    depends_on:
-      - socket-proxy
-    command:
-      - "--providers.docker=true"
-      - "--providers.docker.endpoint=tcp://socket-proxy:2375"
-      - "--providers.docker.network=proxy"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--certificatesresolvers.le.acme.httpchallenge=true"
-      - "--certificatesresolvers.le.acme.email=$EMAIL"
-      - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
-    volumes:
-      - $PWD/data/traefik/letsencrypt:/letsencrypt
-    networks:
-      - proxy
-      - socket_proxy
-    restart: always
-    profiles: ["droplet"]
-
-  jnsgruk:
-    image: jnsgruk/jnsgr.uk:latest
-    container_name: jnsgruk
-    environment:
-      WEBROOT: ./public
-      REDIRECT_MAP_URL: https://gist.githubusercontent.com/jnsgruk/b590f114af1b041eeeab3e7f6e9851b7/raw
-    networks:
-      - proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.jnsgruk.entrypoints=websecure"
-      - "traefik.http.routers.jnsgruk.tls=true"
-      - "traefik.http.routers.jnsgruk.tls.certresolver=le"
-      - "traefik.http.routers.jnsgruk.rule=Host(`jnsgr.uk`) || Host(`www.jnsgr.uk`)"
-    restart: unless-stopped
-    profiles: ["droplet"]
-
-  barry:
-    image: jnsgruk/bestbarry:latest
-    container_name: barry
-    networks:
-      - proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.barry.entrypoints=websecure"
-      - "traefik.http.routers.barry.tls=true"
-      - "traefik.http.routers.barry.tls.certresolver=le"
-      - "traefik.http.routers.barry.rule=Host(`bestbarry.uk`) || Host(`www.bestbarry.uk`)"
-    restart: always
-    profiles: ["droplet"]
+    profiles: ["fitlet"]
 
   #
   # Fitlet Services
@@ -122,7 +59,7 @@ services:
       - "--certificatesresolvers.le.acme.dnschallenge.provider=digitalocean"
       - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
     environment:
-      - DO_AUTH_TOKEN: $DO_AUTH_TOKEN
+      - DO_AUTH_TOKEN=$DO_AUTH_TOKEN
     volumes:
       - $FITLET_APPS_ROOT/data/traefik/letsencrypt:/letsencrypt
       - $FITLET_APPS_ROOT/data/traefik/config.yml:/etc/traefik/config.yml

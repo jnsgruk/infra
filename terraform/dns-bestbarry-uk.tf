@@ -32,7 +32,7 @@ resource "digitalocean_record" "bestbarry-apex" {
   domain = digitalocean_domain.bestbarry.id
   type   = "A"
   name   = "@"
-  value  = digitalocean_droplet.droplet_jnsgruk_micro.ipv4_address
+  value  = "137.66.3.66"
   ttl    = 3600
 }
 
@@ -40,6 +40,32 @@ resource "digitalocean_record" "bestbarry-www" {
   domain = digitalocean_domain.bestbarry.id
   type   = "A"
   name   = "www"
-  value  = digitalocean_droplet.droplet_jnsgruk_micro.ipv4_address
+  value  = "137.66.3.66"
+  ttl    = 3600
+}
+
+# AAAA Records
+resource "digitalocean_record" "bestbarry-apex-ipv6" {
+  domain = digitalocean_domain.bestbarry.id
+  type   = "AAAA"
+  name   = "@"
+  value  = "2a09:8280:1::6:6c52"
+  ttl    = 3600
+}
+
+resource "digitalocean_record" "bestbarry-www-ipv6" {
+  domain = digitalocean_domain.bestbarry.id
+  type   = "AAAA"
+  name   = "@"
+  value  = "2a09:8280:1::6:6c52"
+  ttl    = 3600
+}
+
+# CNAME
+resource "digitalocean_record" "bestbarry-fly-wildcard-cert-validation" {
+  domain = digitalocean_domain.bestbarry.id
+  type   = "CNAME"
+  name   = "_acme-challenge"
+  value  = "bestbarry.uk.5pmlx.flydns.net."
   ttl    = 3600
 }

@@ -32,15 +32,7 @@ resource "digitalocean_record" "jnsgruk-apex" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
   name   = "@"
-  value  = digitalocean_droplet.droplet_jnsgruk_micro.ipv4_address
-  ttl    = 3600
-}
-
-resource "digitalocean_record" "jnsgruk-wg" {
-  domain = digitalocean_domain.jnsgruk.id
-  type   = "A"
-  name   = "wg"
-  value  = digitalocean_droplet.droplet_jnsgruk_micro.ipv4_address
+  value  = "37.16.31.92"
   ttl    = 3600
 }
 
@@ -48,7 +40,7 @@ resource "digitalocean_record" "jnsgruk-www" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
   name   = "www"
-  value  = digitalocean_droplet.droplet_jnsgruk_micro.ipv4_address
+  value  = "37.16.31.92"
   ttl    = 3600
 }
 
@@ -76,6 +68,15 @@ resource "digitalocean_record" "jnsgruk-sync" {
   ttl    = 3600
 }
 
+# AAAA
+resource "digitalocean_record" "jnsgruk-fly-cert-validation" {
+  domain = digitalocean_domain.jnsgruk.id
+  type   = "AAAA"
+  name   = "@"
+  value  = "2a09:8280:1::6bb6"
+  ttl    = 3600
+}
+
 # CNAME Records
 
 resource "digitalocean_record" "jnsgruk-dkim1" {
@@ -99,6 +100,14 @@ resource "digitalocean_record" "jnsgruk-dkim3" {
   type   = "CNAME"
   name   = "fm3._domainkey"
   value  = "fm3.jnsgr.uk.dkim.fmhosted.com."
+  ttl    = 3600
+}
+
+resource "digitalocean_record" "jnsgruk-fly-wildcard-cert-validation" {
+  domain = digitalocean_domain.jnsgruk.id
+  type   = "CNAME"
+  name   = "_acme-challenge"
+  value  = "jnsgr.uk.9w6nj.flydns.net."
   ttl    = 3600
 }
 

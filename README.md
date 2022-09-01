@@ -1,10 +1,8 @@
 # Personal Infrastructure
 
-This repo contains the Infrastructure-as-Code that creates my personal infrastructure using
+This repo contains the Infrastructure-as-Code that manages my personal infrastructure using
 `docker-compose` and `terraform`. It currently manages:
 
-- [A DigitalOcean Droplet](./terraform/personal-infra.tf)
-- [A DigitalOcean Firewall](./terraform/personal-infra.tf)
 - DNS Records for my domains:
   - [bestbarry.uk](./terraform/bestbarry-uk.tf)
   - [ctrl-elk-del.com](./terraform/dns-ctrl-elk-del-com.tf)
@@ -13,11 +11,9 @@ This repo contains the Infrastructure-as-Code that creates my personal infrastru
   - [jon0.co.uk](./terraform/dns-jon0-co-uk.tf)
   - [sgrs.uk](./terraform/dns-sgrs-uk.tf)
 
-It manages the following services on the Droplet:
+Web pages are hosted on [Fly](https://fly.io):
 
-- [traefik](https://traefik.io)
-- [watchtower](https://github.com/containrrr/watchtower)
-- [jnsgr.uk](https://github.com/jnsgruk/jnsgr.uk)
+- [jnsgr.uk](https://jnsgr.uk) / [Source](https://github.com/jnsgruk/jnsgr.uk)
 - [bestbarry.uk](https://bestbarry.uk)
 
 It manages the following services on the Fitlet:
@@ -69,7 +65,7 @@ $ terraform apply
 
 ### Deploying Services
 
-Once the droplet is provisioned, install [`docker`](https://docs.docker.com/engine/install/ubuntu/)
+Once machines are provisioned, install [`docker`](https://docs.docker.com/engine/install/ubuntu/)
 and [`docker-compose`](https://docs.docker.com/compose/install/compose-plugin/).
 
 ```bash
@@ -77,8 +73,8 @@ and [`docker-compose`](https://docs.docker.com/compose/install/compose-plugin/).
 $ git clone https://github.com/jnsgruk/infra
 # Change into the repo directory
 $ cd infra
-# Set the COMPOSE_PROFILES variable to either 'droplet' or 'fitlet'
-$ export COMPOSE_PROFILES=droplet
+# Set the COMPOSE_PROFILES variable to one of ["fitlet"]
+$ export COMPOSE_PROFILES=fitlet
 # Create the infrastructure
 $ docker compose up -d
 ```
