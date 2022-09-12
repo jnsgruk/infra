@@ -78,3 +78,8 @@ $ export COMPOSE_PROFILES=fitlet
 # Create the infrastructure
 $ docker compose up -d
 ```
+
+
+### Infrastructure model
+
+![Infrastructure model](.infragenie/infrastructure_model.png)
