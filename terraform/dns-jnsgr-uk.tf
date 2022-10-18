@@ -44,6 +44,14 @@ resource "digitalocean_record" "jnsgruk-www" {
   ttl    = 3600
 }
 
+resource "digitalocean_record" "jnsgruk-homarr" {
+  domain = digitalocean_domain.jnsgruk.id
+  type   = "A"
+  name   = "homarr"
+  value  = "100.112.193.80"
+  ttl    = 3600
+}
+
 resource "digitalocean_record" "jnsgruk-backup" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
