@@ -137,6 +137,15 @@ resource "digitalocean_record" "jnsgruk-fastmail-spf" {
   ttl    = 3600
 }
 
+resource "digitalocean_record" "jnsgruk-keyoxide" {
+  domain = digitalocean_domain.jnsgruk.id
+  type   = "TXT"
+  name   = "@"
+  value  = "openpgp4fpr:83b266dcf3e3f2b41264a9f5f4a9184451bd9a74"
+  ttl    = 3600
+}
+
+
 # MX Records
 
 resource "digitalocean_record" "jnsgruk-fastmail-1" {
