@@ -44,10 +44,10 @@ resource "digitalocean_record" "jnsgruk-www" {
   ttl    = 3600
 }
 
-resource "digitalocean_record" "jnsgruk-homarr" {
+resource "digitalocean_record" "jnsgruk-dash" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
-  name   = "homarr"
+  name   = "dash"
   value  = "100.112.193.80"
   ttl    = 3600
 }
