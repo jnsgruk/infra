@@ -48,7 +48,7 @@ resource "digitalocean_record" "jnsgruk-dash" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
   name   = "dash"
-  value  = "100.112.193.80"
+  value  = "100.126.73.121"
   ttl    = 3600
 }
 
@@ -56,7 +56,7 @@ resource "digitalocean_record" "jnsgruk-backup" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
   name   = "backup"
-  value  = "100.112.193.80"
+  value  = "100.126.73.121"
   ttl    = 3600
 }
 
@@ -64,7 +64,7 @@ resource "digitalocean_record" "jnsgruk-files" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
   name   = "files"
-  value  = "100.112.193.80"
+  value  = "100.126.73.121"
   ttl    = 3600
 }
 
@@ -72,7 +72,7 @@ resource "digitalocean_record" "jnsgruk-sync" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
   name   = "*.sync"
-  value  = "100.112.193.80"
+  value  = "100.126.73.121"
   ttl    = 3600
 }
 

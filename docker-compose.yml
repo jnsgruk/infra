@@ -5,9 +5,6 @@ networks:
   socket_proxy:
 
 services:
-  #
-  # Common Services
-  #
   socket-proxy:
     image: tecnativa/docker-socket-proxy
     container_name: socket-proxy
@@ -19,7 +16,6 @@ services:
     networks:
       - socket_proxy
     restart: always
-    profiles: ["fitlet"]
 
   watchtower:
     image: containrrr/watchtower
@@ -31,15 +27,9 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
-    profiles: ["fitlet"]
 
-  #
-  # Fitlet Services
-  #
-  traefik-fitlet:
-    # image: traefik:v2.8.0
-    # Switch to experimental to support getting certs from Tailscale daemon
-    image: traefik/traefik:experimental-master
+  traefik:
+    image: traefik:v2.10
     container_name: traefik
     ports:
       - 80:80
@@ -64,14 +54,13 @@ services:
     environment:
       - DO_AUTH_TOKEN=$DO_AUTH_TOKEN
     volumes:
-      - $FITLET_APPS_ROOT/data/traefik/letsencrypt:/letsencrypt
-      - $FITLET_APPS_ROOT/data/traefik/config.yml:/etc/traefik/config.yml
+      - $APPS_ROOT/data/traefik/letsencrypt:/letsencrypt
+      - $APPS_ROOT/data/traefik/config.yml:/etc/traefik/config.yml
       - /run/tailscale/tailscaled.sock:/var/run/tailscale/tailscaled.sock
     networks:
       - proxy
       - socket_proxy
     restart: always
-    profiles: ["fitlet"]
 
   duplicati:
     image: lscr.io/linuxserver/duplicati
@@ -87,13 +76,12 @@ services:
       - "traefik.http.routers.duplicati.tls.certresolver=le"
       - "traefik.http.routers.duplicati.rule=Host(`backup.jnsgr.uk`)"
     volumes:
-      - $FITLET_APPS_ROOT/data/duplicati:/config
-      - $FITLET_DATA_ROOT:/source
+      - $APPS_ROOT/data/duplicati:/config
+      - $DATA_ROOT:/source
     ports:
       - 8200:8200
     restart: unless-stopped
     networks: ["proxy"]
-    profiles: ["fitlet"]
 
   syncthing:
     image: lscr.io/linuxserver/syncthing
@@ -107,10 +95,10 @@ services:
       - "traefik.http.routers.syncthing.entrypoints=websecure"
       - "traefik.http.routers.syncthing.tls=true"
       - "traefik.http.routers.syncthing.tls.certresolver=le"
-      - "traefik.http.routers.syncthing.rule=Host(`fitlet.sync.jnsgr.uk`)"
+      - "traefik.http.routers.syncthing.rule=Host(`thor.sync.jnsgr.uk`)"
     volumes:
-      - $FITLET_APPS_ROOT/data/syncthing:/config
-      - $FITLET_DATA_ROOT:/data1
+      - $APPS_ROOT/data/syncthing:/config
+      - $DATA_ROOT:/data1
     ports:
       - 8384:8384
       - 22000:22000/tcp
@@ -118,7 +106,6 @@ services:
       - 21027:21027/udp
     restart: unless-stopped
     networks: ["proxy"]
-    profiles: ["fitlet"]
 
   nginx:
     image: lscr.io/linuxserver/nginx
@@ -134,8 +121,7 @@ services:
       - "traefik.http.routers.files.tls.certresolver=le"
       - "traefik.http.routers.files.rule=Host(`files.jnsgr.uk`)"
     volumes:
-      - $FITLET_APPS_ROOT/data/files-app:/config
-      - $FITLET_DATA_ROOT:/data
+      - $APPS_ROOT/data/files-app:/config
+      - $DATA_ROOT:/data
     restart: unless-stopped
     networks: ["proxy"]
-    profiles: ["fitlet"]

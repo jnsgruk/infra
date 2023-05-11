@@ -16,7 +16,7 @@ Web pages are hosted on [Fly](https://fly.io):
 - [jnsgr.uk](https://jnsgr.uk) / [Source](https://github.com/jnsgruk/jnsgr.uk)
 - [bestbarry.uk](https://bestbarry.uk)
 
-It manages the following services on the Fitlet:
+It manages the following services:
 
 - [traefik](https://traefik.io)
 - [watchtower](https://github.com/containrrr/watchtower)
@@ -24,8 +24,7 @@ It manages the following services on the Fitlet:
 - [syncthing](https://syncthing.net/)
 
 Traefik is configured to redirect all domains to `HTTPS`, and all certs are automatically issued
-from LetsEncrypt (provided the relevant DNS records are in place). On the Droplet, Traefik uses the
-HTTP Challenge provider for LetsEncrypt, on the Fitlet it uses the DNS Challenge provider.
+from LetsEncrypt or Tailscale.
 
 ## Getting Started
 
@@ -41,9 +40,9 @@ DO_AUTH_TOKEN="deadbeef"
 TF_VAR_do_token="deadbeef"
 # Admin email address for LetsEncrypt
 EMAIL="foo@bar.org"
-# Data paths on Fitlet
-FITLET_DATA_ROOT="/some/path"
-FITLET_APPS_ROOT="${FITLET_DATA_ROOT}/infra"
+# Data paths
+DATA_ROOT="/some/path"
+APPS_ROOT="${DATA_ROOT}/infra"
 ```
 
 ### Provisioning the Infrastructure
@@ -73,8 +72,6 @@ and [`docker-compose`](https://docs.docker.com/compose/install/compose-plugin/).
 $ git clone https://github.com/jnsgruk/infra
 # Change into the repo directory
 $ cd infra
-# Set the COMPOSE_PROFILES variable to one of ["fitlet"]
-$ export COMPOSE_PROFILES=fitlet
 # Create the infrastructure
 $ docker compose up -d
 ```
