@@ -29,7 +29,7 @@ services:
     restart: always
 
   traefik:
-    image: traefik:v2.10
+    image: traefik/traefik:experimental-master
     container_name: traefik
     ports:
       - 80:80
