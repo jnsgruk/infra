@@ -95,7 +95,7 @@ services:
       - "traefik.http.routers.syncthing.entrypoints=websecure"
       - "traefik.http.routers.syncthing.tls=true"
       - "traefik.http.routers.syncthing.tls.certresolver=le"
-      - "traefik.http.routers.syncthing.rule=Host(`thor.sync.jnsgr.uk`)"
+      - "traefik.http.routers.syncthing.rule=Host(`loki.sync.jnsgr.uk`)"
     volumes:
       - $APPS_ROOT/data/syncthing:/config
       - $DATA_ROOT:/data1
