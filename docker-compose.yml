@@ -8,7 +8,7 @@ services:
   socket-proxy:
     image: tecnativa/docker-socket-proxy
     container_name: socket-proxy
-    privileged: yes
+    privileged: true
     environment:
       - CONTAINERS=1
     volumes:
