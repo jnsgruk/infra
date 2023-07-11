@@ -28,22 +28,6 @@ resource "digitalocean_record" "jnsgruk-ns3" {
 
 # A Records
 
-resource "digitalocean_record" "jnsgruk-apex" {
-  domain = digitalocean_domain.jnsgruk.id
-  type   = "A"
-  name   = "@"
-  value  = "37.16.31.92"
-  ttl    = 3600
-}
-
-resource "digitalocean_record" "jnsgruk-www" {
-  domain = digitalocean_domain.jnsgruk.id
-  type   = "A"
-  name   = "www"
-  value  = "37.16.31.92"
-  ttl    = 3600
-}
-
 resource "digitalocean_record" "jnsgruk-dash" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
@@ -73,6 +57,22 @@ resource "digitalocean_record" "jnsgruk-sync" {
   type   = "A"
   name   = "*.sync"
   value  = "100.67.109.40"
+  ttl    = 3600
+}
+
+resource "digitalocean_record" "jnsgruk-apex" {
+  domain = digitalocean_domain.jnsgruk.id
+  type   = "A"
+  name   = "@"
+  value  = "37.16.31.92"
+  ttl    = 3600
+}
+
+resource "digitalocean_record" "jnsgruk-www" {
+  domain = digitalocean_domain.jnsgruk.id
+  type   = "A"
+  name   = "www"
+  value  = "37.16.31.92"
   ttl    = 3600
 }
 
