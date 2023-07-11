@@ -26,7 +26,6 @@ The `.env` file should be created at the root of the repository in the following
 # Access key for the Azure Storage Account storing the Terraform state
 ARM_ACCESS_KEY="deadbeef"
 TF_VAR_do_token="deadbeef"
-EMAIL="foo@bar.org"
 ```
 
 ### Provisioning the Infrastructure
