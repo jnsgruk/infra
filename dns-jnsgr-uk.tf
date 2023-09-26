@@ -36,14 +36,6 @@ resource "digitalocean_record" "jnsgruk-dash" {
   ttl    = 3600
 }
 
-resource "digitalocean_record" "jnsgruk-backup" {
-  domain = digitalocean_domain.jnsgruk.id
-  type   = "A"
-  name   = "backup"
-  value  = "100.67.109.40"
-  ttl    = 3600
-}
-
 resource "digitalocean_record" "jnsgruk-files" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
