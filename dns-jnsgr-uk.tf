@@ -56,7 +56,7 @@ resource "digitalocean_record" "jnsgruk-apex" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
   name   = "@"
-  value  = "37.16.31.92"
+  value  = "137.66.21.13"
   ttl    = 3600
 }
 
@@ -64,7 +64,7 @@ resource "digitalocean_record" "jnsgruk-www" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
   name   = "www"
-  value  = "37.16.31.92"
+  value  = "137.66.21.13"
   ttl    = 3600
 }
 
