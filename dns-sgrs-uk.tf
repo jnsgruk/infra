@@ -26,30 +26,20 @@ resource "digitalocean_record" "sgrsuk-ns3" {
   ttl    = 1800
 }
 
-# A Records
-
-resource "digitalocean_record" "sgrsuk-mail-1" {
-  domain = digitalocean_domain.sgrsuk.id
-  type   = "A"
-  name   = "mail"
-  value  = "66.111.4.147"
-  ttl    = 3600
-}
-
-resource "digitalocean_record" "sgrsuk-mail-2" {
-  domain = digitalocean_domain.sgrsuk.id
-  type   = "A"
-  name   = "mail"
-  value  = "66.111.4.148"
-  ttl    = 3600
-}
-
 # CNAME Records
+
+resource "digitalocean_record" "sgrsuk-mail" {
+  domain = digitalocean_domain.sgrsuk.id
+  type   = "CNAME"
+  name   = "mail"
+  value  = "mail.fastmail.com."
+  ttl    = 3600
+}
 
 resource "digitalocean_record" "sgrsuk-dkim1" {
   domain = digitalocean_domain.sgrsuk.id
   type   = "CNAME"
-  name   = "fm1._domainkey"
+  name   = "fm1._domainkey.sgrs.uk"
   value  = "fm1.sgrs.uk.dkim.fmhosted.com."
   ttl    = 3600
 }
@@ -57,7 +47,7 @@ resource "digitalocean_record" "sgrsuk-dkim1" {
 resource "digitalocean_record" "sgrsuk-dkim2" {
   domain = digitalocean_domain.sgrsuk.id
   type   = "CNAME"
-  name   = "fm2._domainkey"
+  name   = "fm2._domainkey.sgrs.uk"
   value  = "fm2.sgrs.uk.dkim.fmhosted.com."
   ttl    = 3600
 }
@@ -65,7 +55,7 @@ resource "digitalocean_record" "sgrsuk-dkim2" {
 resource "digitalocean_record" "sgrsuk-dkim3" {
   domain = digitalocean_domain.sgrsuk.id
   type   = "CNAME"
-  name   = "fm3._domainkey"
+  name   = "fm3._domainkey.sgrs.uk"
   value  = "fm3.sgrs.uk.dkim.fmhosted.com."
   ttl    = 3600
 }
@@ -75,7 +65,7 @@ resource "digitalocean_record" "sgrsuk-dkim3" {
 resource "digitalocean_record" "sgrsuk-fastmail-spf" {
   domain = digitalocean_domain.sgrsuk.id
   type   = "TXT"
-  name   = "@"
+  name   = "sgrs.uk"
   value  = "v=spf1 include:spf.messagingengine.com ?all"
   ttl    = 3600
 }
@@ -114,7 +104,7 @@ resource "digitalocean_record" "sgrsuk-fastmail-2" {
 resource "digitalocean_record" "sgrsuk-smtp-auto" {
   domain   = digitalocean_domain.sgrsuk.id
   type     = "SRV"
-  name     = "_submission._tcp"
+  name     = "_submission._tcp.sgrs.uk"
   value    = "smtp.fastmail.com."
   port     = 587
   weight   = 1
@@ -126,7 +116,7 @@ resource "digitalocean_record" "sgrsuk-smtp-auto" {
 resource "digitalocean_record" "sgrsuk-imap-auto" {
   domain   = digitalocean_domain.sgrsuk.id
   type     = "SRV"
-  name     = "_imap._tcp"
+  name     = "_imap._tcp.sgrs.uk"
   value    = "."
   port     = 0
   weight   = 0
@@ -137,7 +127,7 @@ resource "digitalocean_record" "sgrsuk-imap-auto" {
 resource "digitalocean_record" "sgrsuk-imaps-auto" {
   domain   = digitalocean_domain.sgrsuk.id
   type     = "SRV"
-  name     = "_imaps._tcp"
+  name     = "_imaps._tcp.sgrs.uk"
   value    = "imap.fastmail.com."
   port     = 993
   weight   = 1
@@ -149,7 +139,7 @@ resource "digitalocean_record" "sgrsuk-imaps-auto" {
 resource "digitalocean_record" "sgrsuk-jmap-auto" {
   domain   = digitalocean_domain.sgrsuk.id
   type     = "SRV"
-  name     = "_jmap._tcp"
+  name     = "_jmap._tcp.sgrs.uk"
   value    = "jmap.fastmail.com."
   port     = 443
   weight   = 1
@@ -161,7 +151,7 @@ resource "digitalocean_record" "sgrsuk-jmap-auto" {
 resource "digitalocean_record" "sgrsuk-carddav-auto" {
   domain   = digitalocean_domain.sgrsuk.id
   type     = "SRV"
-  name     = "_carddav._tcp"
+  name     = "_carddav._tcp.sgrs.uk"
   value    = "."
   port     = 0
   weight   = 0
@@ -172,7 +162,7 @@ resource "digitalocean_record" "sgrsuk-carddav-auto" {
 resource "digitalocean_record" "sgrsuk-carddavs-auto" {
   domain   = digitalocean_domain.sgrsuk.id
   type     = "SRV"
-  name     = "_carddavs._tcp"
+  name     = "_carddavs._tcp.sgrs.uk"
   value    = "carddav.fastmail.com."
   port     = 443
   weight   = 1
@@ -184,7 +174,7 @@ resource "digitalocean_record" "sgrsuk-carddavs-auto" {
 resource "digitalocean_record" "sgrsuk-caldav-auto" {
   domain   = digitalocean_domain.sgrsuk.id
   type     = "SRV"
-  name     = "_caldav._tcp"
+  name     = "_caldav._tcp.sgrs.uk"
   value    = "."
   port     = 0
   weight   = 0
@@ -195,7 +185,7 @@ resource "digitalocean_record" "sgrsuk-caldav-auto" {
 resource "digitalocean_record" "sgrsuk-caldavs-auto" {
   domain   = digitalocean_domain.sgrsuk.id
   type     = "SRV"
-  name     = "_caldavs._tcp"
+  name     = "_caldavs._tcp.sgrs.uk"
   value    = "caldav.fastmail.com."
   port     = 443
   weight   = 1
