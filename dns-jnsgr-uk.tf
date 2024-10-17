@@ -44,6 +44,14 @@ resource "digitalocean_record" "jnsgruk-ha" {
   ttl    = 3600
 }
 
+resource "digitalocean_record" "jnsgruk-photos" {
+  domain = digitalocean_domain.jnsgruk.id
+  type   = "A"
+  name   = "photos"
+  value  = "100.67.109.40"
+  ttl    = 3600
+}
+
 resource "digitalocean_record" "jnsgruk-sync" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
