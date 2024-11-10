@@ -77,3 +77,55 @@ resource "digitalocean_record" "taborconsulting-fly-cert-validation-www" {
   ttl    = 3600
 }
 
+resource "digitalocean_record" "taborconsulting-ms-office-autodiscover" {
+  domain = digitalocean_domain.taborconsulting.id
+  type   = "CNAME"
+  name   = "autodiscover"
+  value  = "autodiscover.outlook.com."
+  ttl    = 3600
+}
+
+resource "digitalocean_record" "taborconsulting-ms-office-dkim-1" {
+  domain = digitalocean_domain.taborconsulting.id
+  type   = "CNAME"
+  name   = "selector1._domainkey"
+  value  = "selector1-taborconsulting-co-uk01c._domainkey.Taborconsultingltd.onmicrosoft.com."
+  ttl    = 3600
+}
+
+resource "digitalocean_record" "taborconsulting-ms-office-dkim-2" {
+  domain = digitalocean_domain.taborconsulting.id
+  type   = "CNAME"
+  name   = "selector2._domainkey"
+  value  = "selector2-taborconsulting-co-uk01c._domainkey.Taborconsultingltd.onmicrosoft.com."
+  ttl    = 3600
+}
+
+# TXT Records
+
+resource "digitalocean_record" "taborconsulting-ms-office" {
+  domain = digitalocean_domain.taborconsulting.id
+  type = "TXT"
+  name = "@"
+  value = "MS=ms80532337"
+  ttl = 3600
+}
+
+resource "digitalocean_record" "taborconsulting-ms-office-spf" {
+  domain = digitalocean_domain.taborconsulting.id
+  type = "TXT"
+  name = "@"
+  value = "v=spf1 include:spf.protection.outlook.com -all"
+  ttl = 3600
+}
+
+# MX Records
+
+resource "digitalocean_record" "taborconsulting-ms-office-mx" {
+  domain = digitalocean_domain.taborconsulting.id
+  type = "MX"
+  name = "@"
+  value = "taborconsulting-co-uk01c.mail.protection.outlook.com."
+  priority = 0
+  ttl = 3600
+}
