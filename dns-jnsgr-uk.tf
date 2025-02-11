@@ -97,6 +97,14 @@ resource "digitalocean_record" "jnsgruk-fly-wildcard-cert-validation" {
 
 # TXT Records
 
+resource "digitalocean_record" "jnsgruk-bluesky" {
+  domain = digitalocean_domain.jnsgruk.id
+  type   = "TXT"
+  name   = "_atproto"
+  value  = "did=did:plc:tdlofy3jhbdmn4t6uwnpkjfa"
+  ttl    = 3600
+}
+
 resource "digitalocean_record" "jnsgruk-keybase-proof" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "TXT"
