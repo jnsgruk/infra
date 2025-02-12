@@ -28,38 +28,6 @@ resource "digitalocean_record" "jnsgruk-ns3" {
 
 # A Records
 
-resource "digitalocean_record" "jnsgruk-files" {
-  domain = digitalocean_domain.jnsgruk.id
-  type   = "A"
-  name   = "files"
-  value  = "100.67.109.40"
-  ttl    = 3600
-}
-
-resource "digitalocean_record" "jnsgruk-ha" {
-  domain = digitalocean_domain.jnsgruk.id
-  type   = "A"
-  name   = "ha"
-  value  = "100.67.109.40"
-  ttl    = 3600
-}
-
-resource "digitalocean_record" "jnsgruk-photos" {
-  domain = digitalocean_domain.jnsgruk.id
-  type   = "A"
-  name   = "photos"
-  value  = "100.67.109.40"
-  ttl    = 3600
-}
-
-resource "digitalocean_record" "jnsgruk-sync" {
-  domain = digitalocean_domain.jnsgruk.id
-  type   = "A"
-  name   = "*.sync"
-  value  = "100.67.109.40"
-  ttl    = 3600
-}
-
 resource "digitalocean_record" "jnsgruk-apex" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "A"
