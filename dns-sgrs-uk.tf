@@ -60,7 +60,7 @@ resource "digitalocean_record" "sgrsuk-keyoxide" {
   domain = digitalocean_domain.sgrsuk.id
   type   = "TXT"
   name   = "@"
-  value  = "openpgp4fpr:83b266dcf3e3f2b41264a9f5f4a9184451bd9a74"
+  value  = "openpgp4fpr:4518bcc11bc096b80e5fbbaf337587962d8749a0"
   ttl    = 3600
 }
 
