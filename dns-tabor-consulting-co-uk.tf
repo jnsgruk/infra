@@ -56,7 +56,7 @@ resource "digitalocean_record" "taborconsulting-fly-aaaa" {
 resource "digitalocean_record" "taborconsulting-fly-aaaa-www" {
   domain = digitalocean_domain.taborconsulting.id
   type   = "AAAA"
-  name   = "@"
+  name   = "www"
   value  = "2a09:8280:1::4e:a275:0"
   ttl    = 3600
 }
