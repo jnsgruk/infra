@@ -69,7 +69,7 @@ resource "digitalocean_record" "jnsgruk-bluesky" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "TXT"
   name   = "_atproto"
-  value  = "did=did:plc:tdlofy3jhbdmn4t6uwnpkjfa"
+  value  = "did=did:plc:2upv75ffzfvf6pxucpcjwj6k"
   ttl    = 3600
 }
 
