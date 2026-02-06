@@ -45,6 +45,7 @@ resource "digitalocean_record" "jnsgruk-www" {
 }
 
 # AAAA
+
 resource "digitalocean_record" "jnsgruk-fly-cert-validation" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "AAAA"
@@ -54,6 +55,14 @@ resource "digitalocean_record" "jnsgruk-fly-cert-validation" {
 }
 
 # CNAME Records
+
+resource "digitalocean_record" "jnsgruk-fly-coffee-cert-validation" {
+  domain = digitalocean_domain.jnsgruk.id
+  type   = "CNAME"
+  name   = "coffee"
+  value  = "361ewn0.brewlog.fly.dev."
+  ttl    = 3600
+}
 
 resource "digitalocean_record" "jnsgruk-fly-wildcard-cert-validation" {
   domain = digitalocean_domain.jnsgruk.id
