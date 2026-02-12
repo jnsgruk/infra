@@ -64,6 +64,14 @@ resource "digitalocean_record" "jnsgruk-fly-coffee-cert-validation" {
   ttl    = 3600
 }
 
+resource "digitalocean_record" "jnsgruk-fly-books-cert-validation" {
+  domain = digitalocean_domain.jnsgruk.id
+  type   = "CNAME"
+  name   = "books"
+  value  = "2m8w5k9.booklog.fly.dev."
+  ttl    = 3600
+}
+
 resource "digitalocean_record" "jnsgruk-fly-wildcard-cert-validation" {
   domain = digitalocean_domain.jnsgruk.id
   type   = "CNAME"
