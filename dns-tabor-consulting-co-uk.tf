@@ -1,131 +1,123 @@
-resource "digitalocean_domain" "taborconsulting" {
+resource "cloudflare_zone" "taborconsulting" {
+  account = {
+    id = var.cloudflare_account_id
+  }
   name = "tabor-consulting.co.uk"
+  type = "full"
 }
 
-# NS Records
+# Preserve existing answers while changing authoritative DNS providers.
 
-resource "digitalocean_record" "taborconsulting-ns1" {
-  domain = digitalocean_domain.taborconsulting.id
-  type   = "NS"
-  name   = "@"
-  value  = "ns1.digitalocean.com."
-  ttl    = 1800
-}
-resource "digitalocean_record" "taborconsulting-ns2" {
-  domain = digitalocean_domain.taborconsulting.id
-  type   = "NS"
-  name   = "@"
-  value  = "ns2.digitalocean.com."
-  ttl    = 1800
-}
-resource "digitalocean_record" "taborconsulting-ns3" {
-  domain = digitalocean_domain.taborconsulting.id
-  type   = "NS"
-  name   = "@"
-  value  = "ns3.digitalocean.com."
-  ttl    = 1800
+resource "cloudflare_dns_record" "taborconsulting-apex" {
+  zone_id = cloudflare_zone.taborconsulting.id
+  type    = "A"
+  name    = "tabor-consulting.co.uk"
+  content = "66.241.125.53"
+  ttl     = 3600
+  proxied = false
 }
 
-# A Records
-
-resource "digitalocean_record" "taborconsulting-apex" {
-  domain = digitalocean_domain.taborconsulting.id
-  type   = "A"
-  name   = "@"
-  value  = "66.241.125.53"
-  ttl    = 3600
+resource "cloudflare_dns_record" "taborconsulting-www" {
+  zone_id = cloudflare_zone.taborconsulting.id
+  type    = "A"
+  name    = "www.tabor-consulting.co.uk"
+  content = "66.241.125.53"
+  ttl     = 3600
+  proxied = false
 }
 
-resource "digitalocean_record" "taborconsulting-www" {
-  domain = digitalocean_domain.taborconsulting.id
-  type   = "A"
-  name   = "www"
-  value  = "66.241.125.53"
-  ttl    = 3600
+resource "cloudflare_dns_record" "taborconsulting-fly-aaaa" {
+  zone_id = cloudflare_zone.taborconsulting.id
+  type    = "AAAA"
+  name    = "tabor-consulting.co.uk"
+  content = "2a09:8280:1::4e:a275:0"
+  ttl     = 3600
+  proxied = false
 }
 
-# AAAA
-resource "digitalocean_record" "taborconsulting-fly-aaaa" {
-  domain = digitalocean_domain.taborconsulting.id
-  type   = "AAAA"
-  name   = "@"
-  value  = "2a09:8280:1::4e:a275:0"
-  ttl    = 3600
+resource "cloudflare_dns_record" "taborconsulting-fly-aaaa-www" {
+  zone_id = cloudflare_zone.taborconsulting.id
+  type    = "AAAA"
+  name    = "www.tabor-consulting.co.uk"
+  content = "2a09:8280:1::4e:a275:0"
+  ttl     = 3600
+  proxied = false
 }
 
-resource "digitalocean_record" "taborconsulting-fly-aaaa-www" {
-  domain = digitalocean_domain.taborconsulting.id
-  type   = "AAAA"
-  name   = "www"
-  value  = "2a09:8280:1::4e:a275:0"
-  ttl    = 3600
+resource "cloudflare_dns_record" "taborconsulting-fly-cert-validation-apex" {
+  zone_id = cloudflare_zone.taborconsulting.id
+  type    = "CNAME"
+  name    = "_acme-challenge.tabor-consulting.co.uk"
+  content = "tabor-consulting.co.uk.wp9qy8.flydns.net."
+  ttl     = 3600
+  proxied = false
 }
 
-resource "digitalocean_record" "taborconsulting-fly-cert-validation-apex" {
-  domain = digitalocean_domain.taborconsulting.id
-  type   = "CNAME"
-  name   = "_acme-challenge"
-  value  = "tabor-consulting.co.uk.wp9qy8.flydns.net."
-  ttl    = 3600
+resource "cloudflare_dns_record" "taborconsulting-fly-cert-validation-www" {
+  zone_id = cloudflare_zone.taborconsulting.id
+  type    = "CNAME"
+  name    = "_acme-challenge.www.tabor-consulting.co.uk"
+  content = "www.tabor-consulting.co.uk.wp9qy8.flydns.net."
+  ttl     = 3600
+  proxied = false
 }
 
-resource "digitalocean_record" "taborconsulting-fly-cert-validation-www" {
-  domain = digitalocean_domain.taborconsulting.id
-  type   = "CNAME"
-  name   = "_acme-challenge.www"
-  value  = "www.tabor-consulting.co.uk.wp9qy8.flydns.net."
-  ttl    = 3600
+resource "cloudflare_dns_record" "taborconsulting-ms-office-autodiscover" {
+  zone_id = cloudflare_zone.taborconsulting.id
+  type    = "CNAME"
+  name    = "autodiscover.tabor-consulting.co.uk"
+  content = "autodiscover.outlook.com."
+  ttl     = 3600
+  proxied = false
 }
 
-resource "digitalocean_record" "taborconsulting-ms-office-autodiscover" {
-  domain = digitalocean_domain.taborconsulting.id
-  type   = "CNAME"
-  name   = "autodiscover"
-  value  = "autodiscover.outlook.com."
-  ttl    = 3600
+resource "cloudflare_dns_record" "taborconsulting-ms-office-dkim-1" {
+  zone_id = cloudflare_zone.taborconsulting.id
+  type    = "CNAME"
+  name    = "selector1._domainkey.tabor-consulting.co.uk"
+  content = "selector1-taborconsulting-co-uk01c._domainkey.Taborconsultingltd.onmicrosoft.com."
+  ttl     = 3600
+  proxied = false
 }
 
-resource "digitalocean_record" "taborconsulting-ms-office-dkim-1" {
-  domain = digitalocean_domain.taborconsulting.id
-  type   = "CNAME"
-  name   = "selector1._domainkey"
-  value  = "selector1-taborconsulting-co-uk01c._domainkey.Taborconsultingltd.onmicrosoft.com."
-  ttl    = 3600
+resource "cloudflare_dns_record" "taborconsulting-ms-office-dkim-2" {
+  zone_id = cloudflare_zone.taborconsulting.id
+  type    = "CNAME"
+  name    = "selector2._domainkey.tabor-consulting.co.uk"
+  content = "selector2-taborconsulting-co-uk01c._domainkey.Taborconsultingltd.onmicrosoft.com."
+  ttl     = 3600
+  proxied = false
 }
 
-resource "digitalocean_record" "taborconsulting-ms-office-dkim-2" {
-  domain = digitalocean_domain.taborconsulting.id
-  type   = "CNAME"
-  name   = "selector2._domainkey"
-  value  = "selector2-taborconsulting-co-uk01c._domainkey.Taborconsultingltd.onmicrosoft.com."
-  ttl    = 3600
+resource "cloudflare_dns_record" "taborconsulting-ms-office" {
+  zone_id = cloudflare_zone.taborconsulting.id
+  type    = "TXT"
+  name    = "tabor-consulting.co.uk"
+  content = "\"MS=ms80532337\""
+  ttl     = 3600
+  proxied = false
 }
 
-# TXT Records
-
-resource "digitalocean_record" "taborconsulting-ms-office" {
-  domain = digitalocean_domain.taborconsulting.id
-  type = "TXT"
-  name = "@"
-  value = "MS=ms80532337"
-  ttl = 3600
+resource "cloudflare_dns_record" "taborconsulting-ms-office-spf" {
+  zone_id = cloudflare_zone.taborconsulting.id
+  type    = "TXT"
+  name    = "tabor-consulting.co.uk"
+  content = "\"v=spf1 include:spf.protection.outlook.com -all\""
+  ttl     = 3600
+  proxied = false
 }
 
-resource "digitalocean_record" "taborconsulting-ms-office-spf" {
-  domain = digitalocean_domain.taborconsulting.id
-  type = "TXT"
-  name = "@"
-  value = "v=spf1 include:spf.protection.outlook.com -all"
-  ttl = 3600
-}
-
-# MX Records
-
-resource "digitalocean_record" "taborconsulting-ms-office-mx" {
-  domain = digitalocean_domain.taborconsulting.id
-  type = "MX"
-  name = "@"
-  value = "taborconsulting-co-uk01c.mail.protection.outlook.com."
+resource "cloudflare_dns_record" "taborconsulting-ms-office-mx" {
+  zone_id  = cloudflare_zone.taborconsulting.id
+  type     = "MX"
+  name     = "tabor-consulting.co.uk"
+  content  = "taborconsulting-co-uk01c.mail.protection.outlook.com."
+  ttl      = 3600
+  proxied  = false
   priority = 0
-  ttl = 3600
+}
+
+output "taborconsulting_name_servers" {
+  description = "Set these nameservers at the registrar after verifying the Cloudflare zone."
+  value       = cloudflare_zone.taborconsulting.name_servers
 }
