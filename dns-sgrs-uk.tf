@@ -62,6 +62,16 @@ resource "cloudflare_dns_record" "sgrsuk-icloud-2" {
   proxied  = false
 }
 
+# Start without enforcement while mail authentication is verified after cutover.
+resource "cloudflare_dns_record" "sgrsuk-dmarc" {
+  zone_id = cloudflare_zone.sgrsuk.id
+  type    = "TXT"
+  name    = "_dmarc.sgrs.uk"
+  content = "\"v=DMARC1; p=none\""
+  ttl     = 3600
+  proxied = false
+}
+
 output "sgrsuk_name_servers" {
   description = "Set these nameservers at the registrar after verifying the Cloudflare zone."
   value       = cloudflare_zone.sgrsuk.name_servers
