@@ -66,7 +66,7 @@ resource "cloudflare_dns_record" "jnsgruk-bluesky" {
   zone_id = cloudflare_zone.jnsgruk.id
   type    = "TXT"
   name    = "_atproto.jnsgr.uk"
-  content = "did=did:plc:2upv75ffzfvf6pxucpcjwj6k"
+  content = "\"did=did:plc:2upv75ffzfvf6pxucpcjwj6k\""
   ttl     = 3600
   proxied = false
 }
@@ -75,7 +75,7 @@ resource "cloudflare_dns_record" "jnsgruk-keybase-proof" {
   zone_id = cloudflare_zone.jnsgruk.id
   type    = "TXT"
   name    = "jnsgr.uk"
-  content = "keybase-site-verification=kim2lHkuXnd-QgMAhiQHJYJNNS2TDXkZe-as4L6drpA"
+  content = "\"keybase-site-verification=kim2lHkuXnd-QgMAhiQHJYJNNS2TDXkZe-as4L6drpA\""
   ttl     = 3600
   proxied = false
 }
@@ -84,7 +84,7 @@ resource "cloudflare_dns_record" "jnsgruk-keyoxide" {
   zone_id = cloudflare_zone.jnsgruk.id
   type    = "TXT"
   name    = "jnsgr.uk"
-  content = "openpgp4fpr:4518bcc11bc096b80e5fbbaf337587962d8749a0"
+  content = "\"openpgp4fpr:4518bcc11bc096b80e5fbbaf337587962d8749a0\""
   ttl     = 3600
   proxied = false
 }
