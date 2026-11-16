@@ -1,50 +1,55 @@
 # Personal Infrastructure
 
-This repo contains the Infrastructure-as-Code that manages my personal infrastructure using
-`terraform`. It manages DNS for:
+Terraform configuration for:
 
-- [jnsgr.uk](./dns-jnsgr-uk.tf) on Cloudflare (DNS-only, without the HTTP proxy).
+- [jnsgr.uk](./dns-jnsgr-uk.tf) on Cloudflare.
 - [sgrs.uk](./dns-sgrs-uk.tf) on DigitalOcean.
 - [tabor-consulting.co.uk](./dns-tabor-consulting-co-uk.tf) on DigitalOcean.
 
-Web pages are hosted on [Fly](https://fly.io):
+The `jnsgr.uk` apex uses the existing Cloudflare Worker `website`. Its Custom
+Domain manages DNS and TLS automatically. `www` uses a proxied, originless A
+record (`192.0.2.0`) and redirects to the HTTPS apex, preserving paths and queries.
+A separate apex-only redirect enforces HTTPS without changing zone settings.
+Coffee, books, identity proofs and shared Fly certificate-validation records
+remain unchanged in Cloudflare.
 
-- [jnsgr.uk](https://jnsgr.uk) / [Source](https://github.com/jnsgruk/jnsgr.uk)
+Terraform owns domain bindings, DNS and redirects. The
+[website repository](https://github.com/jnsgruk/jnsgr.uk) owns Worker code and assets;
+its Wrangler configuration must not also own the domain routes.
 
-## Getting Started
+## Setup
 
-Requires Terraform >= 1.7 for the non-destructive `removed` blocks.
+Requires Terraform >= 1.7. The Cloudflare provider is pinned to `~> 5.29.0`.
+State is stored in Azure Blob Storage.
 
-Supply these environment variables through your secret manager or an untracked `.env` file:
+Supply credentials through environment variables:
 
 ```bash
-# Access key for the Azure Storage Account storing the Terraform state
 ARM_ACCESS_KEY="..."
 TF_VAR_do_token="..."
 CLOUDFLARE_API_TOKEN="..."
 TF_VAR_cloudflare_account_id="..."
 ```
 
-Use a Cloudflare API token with Zone:Zone:Edit (for zone creation) and
-Zone:DNS:Edit for the intended account/zone. Do not use the Global API Key.
-If the zone is already created, Zone:Zone:Read and Zone:DNS:Edit scoped to
-`jnsgr.uk` suffice after importing it. Keep credentials out of git.
-
-For GitHub deployment, keep the existing `ARM_ACCESS_KEY` and `TF_VAR_do_token`
-repository secrets, add the `CLOUDFLARE_API_TOKEN` repository secret, and set the
-`CLOUDFLARE_ACCOUNT_ID` repository variable. Configure these before merging:
-merges/pushes to `main` automatically apply the configuration after validation.
-PRs only initialise with `-backend=false` and validate without production credentials.
+The Cloudflare token needs access to the intended account/zone for zone reads
+(Edit if creating a zone), DNS edits, Workers Scripts edits and Dynamic Redirect
+edits. Credentials, Terraform state and saved plans must stay out of git.
 
 ```bash
-git clone https://github.com/jnsgruk/infra
-cd infra
-# If using .env, load the trusted file and export its variables:
-set -a
-. ./.env
-set +a
 terraform init
 terraform plan -out=terraform.tfplan
-# Review the plan before applying it:
-terraform apply terraform.tfplan
+terraform show terraform.tfplan
 ```
+
+For validation without backend access:
+
+```bash
+terraform fmt -check dns-jnsgr-uk.tf provider.tf variables.tf
+terraform init -backend=false
+terraform validate
+```
+
+## Deployment
+
+Pull requests validate without production credentials. Pushes to `main`
+automatically apply using the repository secrets and `CLOUDFLARE_ACCOUNT_ID` variable.
