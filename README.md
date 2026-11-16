@@ -1,11 +1,11 @@
 # Personal Infrastructure
 
 This repo contains the Infrastructure-as-Code that manages my personal infrastructure using
-`terraform`. It currently manages:
+`terraform`. It manages DNS for:
 
-- DNS Records for my domains:
-  - [jnsgr.uk](./terraform/dns-jnsgr-uk.tf)
-  - [sgrs.uk](./terraform/dns-sgrs-uk.tf)
+- [jnsgr.uk](./dns-jnsgr-uk.tf) on Cloudflare (DNS-only, without the HTTP proxy).
+- [sgrs.uk](./dns-sgrs-uk.tf) on DigitalOcean.
+- [tabor-consulting.co.uk](./dns-tabor-consulting-co-uk.tf) on DigitalOcean.
 
 Web pages are hosted on [Fly](https://fly.io):
 
@@ -13,27 +13,38 @@ Web pages are hosted on [Fly](https://fly.io):
 
 ## Getting Started
 
-### Creating the `dotenv` file
+Requires Terraform >= 1.7 for the non-destructive `removed` blocks.
 
-The `.env` file should be created at the root of the repository in the following form:
+Supply these environment variables through your secret manager or an untracked `.env` file:
 
 ```bash
 # Access key for the Azure Storage Account storing the Terraform state
-ARM_ACCESS_KEY="deadbeef"
-TF_VAR_do_token="deadbeef"
+ARM_ACCESS_KEY="..."
+TF_VAR_do_token="..."
+CLOUDFLARE_API_TOKEN="..."
+TF_VAR_cloudflare_account_id="..."
 ```
 
-### Provisioning the Infrastructure
+Use a Cloudflare API token with Zone:Zone:Edit (for zone creation) and
+Zone:DNS:Edit for the intended account/zone. Do not use the Global API Key.
+If the zone is already created, Zone:Zone:Read and Zone:DNS:Edit scoped to
+`jnsgr.uk` suffice after importing it. Keep credentials out of git.
 
-To build the infrastructure with Terraform:
+For GitHub deployment, keep the existing `ARM_ACCESS_KEY` and `TF_VAR_do_token`
+repository secrets, add the `CLOUDFLARE_API_TOKEN` repository secret, and set the
+`CLOUDFLARE_ACCOUNT_ID` repository variable. Configure these before merging:
+merges/pushes to `main` automatically apply the configuration after validation.
+PRs only initialise with `-backend=false` and validate without production credentials.
 
 ```bash
-$ git clone https://github.com/jnsgruk/infra
-$ cd infra
-# Export the variables from the env file
-$ export $(grep -v "#" .env | xargs)
-# Initialise Terraform
-$ terraform init
-# Deploy the infrastructure
-$ terraform apply
+git clone https://github.com/jnsgruk/infra
+cd infra
+# If using .env, load the trusted file and export its variables:
+set -a
+. ./.env
+set +a
+terraform init
+terraform plan -out=terraform.tfplan
+# Review the plan before applying it:
+terraform apply terraform.tfplan
 ```
