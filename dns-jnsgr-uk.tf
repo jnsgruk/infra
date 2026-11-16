@@ -57,7 +57,7 @@ resource "cloudflare_ruleset" "jnsgruk_redirects" {
     {
       ref         = "apex_https"
       description = "Enforce HTTPS only for the apex"
-      expression  = "(http.host eq \"jnsgr.uk\" and http.request.scheme eq \"http\")"
+      expression  = "(http.host eq \"jnsgr.uk\" and not ssl)"
       action      = "redirect"
       enabled     = true
       action_parameters = {
