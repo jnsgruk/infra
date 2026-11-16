@@ -32,7 +32,6 @@ Supply credentials through environment variables:
 
 ```bash
 ARM_ACCESS_KEY="..."
-TF_VAR_do_token="..."
 CLOUDFLARE_API_TOKEN="..."
 TF_VAR_cloudflare_account_id="..."
 ```

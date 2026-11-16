@@ -6,10 +6,6 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "~> 5.29.0"
     }
-    digitalocean = {
-      source  = "digitalocean/digitalocean"
-      version = "~>2.0"
-    }
   }
 
   backend "azurerm" {
@@ -17,10 +13,6 @@ terraform {
     container_name       = "tfstate"
     key                  = "prod.terraform.tfstate"
   }
-}
-
-provider "digitalocean" {
-  token = var.do_token
 }
 
 # Authentication is supplied through CLOUDFLARE_API_TOKEN.
