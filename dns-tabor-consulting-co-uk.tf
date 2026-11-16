@@ -6,43 +6,75 @@ resource "cloudflare_zone" "taborconsulting" {
   type = "full"
 }
 
-# Preserve existing answers while changing authoritative DNS providers.
-
-resource "cloudflare_dns_record" "taborconsulting-apex" {
-  zone_id = cloudflare_zone.taborconsulting.id
-  type    = "A"
-  name    = "tabor-consulting.co.uk"
-  content = "66.241.125.53"
-  ttl     = 3600
-  proxied = false
+# Cloudflare owns the apex DNS and TLS certificate through this binding.
+# The website repository owns the existing Worker's code/assets, not its routes.
+# Existing apex A/AAAA records must be removed before creating this binding.
+resource "cloudflare_workers_custom_domain" "taborconsulting" {
+  account_id       = var.cloudflare_account_id
+  zone_id          = cloudflare_zone.taborconsulting.id
+  hostname         = cloudflare_zone.taborconsulting.name
+  service          = "tabor-consulting"
+  enabled          = true
+  previews_enabled = false
 }
+
+
+# One zone entry point per phase. If one already exists, import it and preserve
+# ALL existing rules before adding these two.
+resource "cloudflare_ruleset" "taborconsulting_redirects" {
+  zone_id     = cloudflare_zone.taborconsulting.id
+  name        = "tabor-consulting.co.uk redirects"
+  description = "Canonical website hostname and apex HTTPS"
+  kind        = "zone"
+  phase       = "http_request_dynamic_redirect"
+
+  rules = [
+    {
+      ref         = "www_to_apex"
+      description = "Redirect www to the HTTPS apex, preserving path and query"
+      expression  = "(http.host eq \"www.tabor-consulting.co.uk\")"
+      action      = "redirect"
+      enabled     = true
+      action_parameters = {
+        from_value = {
+          status_code = 301
+          target_url = {
+            expression = "concat(\"https://tabor-consulting.co.uk\", http.request.uri.path)"
+          }
+          preserve_query_string = true
+        }
+      }
+    },
+    {
+      ref         = "apex_https"
+      description = "Enforce HTTPS only for the apex"
+      expression  = "(http.host eq \"tabor-consulting.co.uk\" and not ssl)"
+      action      = "redirect"
+      enabled     = true
+      action_parameters = {
+        from_value = {
+          status_code = 301
+          target_url = {
+            expression = "concat(\"https://tabor-consulting.co.uk\", http.request.uri.path)"
+          }
+          preserve_query_string = true
+        }
+      }
+    }
+  ]
+}
+
 
 resource "cloudflare_dns_record" "taborconsulting-www" {
   zone_id = cloudflare_zone.taborconsulting.id
   type    = "A"
   name    = "www.tabor-consulting.co.uk"
-  content = "66.241.125.53"
-  ttl     = 3600
-  proxied = false
+  content = "192.0.2.0"
+  ttl     = 1
+  proxied = true
 }
 
-resource "cloudflare_dns_record" "taborconsulting-fly-aaaa" {
-  zone_id = cloudflare_zone.taborconsulting.id
-  type    = "AAAA"
-  name    = "tabor-consulting.co.uk"
-  content = "2a09:8280:1::4e:a275:0"
-  ttl     = 3600
-  proxied = false
-}
 
-resource "cloudflare_dns_record" "taborconsulting-fly-aaaa-www" {
-  zone_id = cloudflare_zone.taborconsulting.id
-  type    = "AAAA"
-  name    = "www.tabor-consulting.co.uk"
-  content = "2a09:8280:1::4e:a275:0"
-  ttl     = 3600
-  proxied = false
-}
 
 resource "cloudflare_dns_record" "taborconsulting-fly-cert-validation-apex" {
   zone_id = cloudflare_zone.taborconsulting.id
