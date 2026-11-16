@@ -1,85 +1,78 @@
-resource "digitalocean_domain" "sgrsuk" {
+resource "cloudflare_zone" "sgrsuk" {
+  account = {
+    id = var.cloudflare_account_id
+  }
   name = "sgrs.uk"
+  type = "full"
 }
 
-# NS Records
-
-resource "digitalocean_record" "sgrsuk-ns1" {
-  domain = digitalocean_domain.sgrsuk.id
-  type   = "NS"
-  name   = "@"
-  value  = "ns1.digitalocean.com."
-  ttl    = 1800
-}
-resource "digitalocean_record" "sgrsuk-ns2" {
-  domain = digitalocean_domain.sgrsuk.id
-  type   = "NS"
-  name   = "@"
-  value  = "ns2.digitalocean.com."
-  ttl    = 1800
-}
-resource "digitalocean_record" "sgrsuk-ns3" {
-  domain = digitalocean_domain.sgrsuk.id
-  type   = "NS"
-  name   = "@"
-  value  = "ns3.digitalocean.com."
-  ttl    = 1800
+resource "cloudflare_dns_record" "sgrsuk-dkim1" {
+  zone_id = cloudflare_zone.sgrsuk.id
+  type    = "CNAME"
+  name    = "sig1._domainkey.sgrs.uk"
+  content = "sig1.dkim.sgrs.uk.at.icloudmailadmin.com."
+  ttl     = 3600
+  proxied = false
 }
 
-# A Records
-
-# CNAME Records
-
-resource "digitalocean_record" "sgrsuk-dkim1" {
-  domain = digitalocean_domain.sgrsuk.id
-  type   = "CNAME"
-  name   = "sig1._domainkey"
-  value  = "sig1.dkim.sgrs.uk.at.icloudmailadmin.com."
-  ttl    = 3600
+resource "cloudflare_dns_record" "sgrsuk-icloud-txt" {
+  zone_id = cloudflare_zone.sgrsuk.id
+  type    = "TXT"
+  name    = "sgrs.uk"
+  content = "\"apple-domain=1ngUGi1besStkaHI\""
+  ttl     = 3600
+  proxied = false
 }
 
-# TXT Records
-
-resource "digitalocean_record" "sgrsuk-icloud-txt" {
-  domain = digitalocean_domain.sgrsuk.id
-  type   = "TXT"
-  name   = "@"
-  value  = "apple-domain=1ngUGi1besStkaHI"
-  ttl    = 3600
+resource "cloudflare_dns_record" "sgrsuk-icloud-spf" {
+  zone_id = cloudflare_zone.sgrsuk.id
+  type    = "TXT"
+  name    = "sgrs.uk"
+  content = "\"v=spf1 include:icloud.com ~all\""
+  ttl     = 3600
+  proxied = false
 }
 
-resource "digitalocean_record" "sgrsuk-icloud-spf" {
-  domain = digitalocean_domain.sgrsuk.id
-  type   = "TXT"
-  name   = "@"
-  value  = "v=spf1 include:icloud.com ~all"
-  ttl    = 3600
+resource "cloudflare_dns_record" "sgrsuk-keyoxide" {
+  zone_id = cloudflare_zone.sgrsuk.id
+  type    = "TXT"
+  name    = "sgrs.uk"
+  content = "\"openpgp4fpr:4518bcc11bc096b80e5fbbaf337587962d8749a0\""
+  ttl     = 3600
+  proxied = false
 }
 
-resource "digitalocean_record" "sgrsuk-keyoxide" {
-  domain = digitalocean_domain.sgrsuk.id
-  type   = "TXT"
-  name   = "@"
-  value  = "openpgp4fpr:4518bcc11bc096b80e5fbbaf337587962d8749a0"
-  ttl    = 3600
-}
-
-# MX Records
-
-resource "digitalocean_record" "sgrsuk-icloud-1" {
-  domain   = digitalocean_domain.sgrsuk.id
+resource "cloudflare_dns_record" "sgrsuk-icloud-1" {
+  zone_id  = cloudflare_zone.sgrsuk.id
   type     = "MX"
-  name     = "@"
-  value    = "mx01.mail.icloud.com."
+  name     = "sgrs.uk"
+  content  = "mx01.mail.icloud.com."
   priority = 10
   ttl      = 3600
+  proxied  = false
 }
 
-resource "digitalocean_record" "sgrsuk-icloud-2" {
-  domain   = digitalocean_domain.sgrsuk.id
+resource "cloudflare_dns_record" "sgrsuk-icloud-2" {
+  zone_id  = cloudflare_zone.sgrsuk.id
   type     = "MX"
-  name     = "@"
-  value    = "mx02.mail.icloud.com."
+  name     = "sgrs.uk"
+  content  = "mx02.mail.icloud.com."
   priority = 10
   ttl      = 3600
+  proxied  = false
+}
+
+# Start without enforcement while mail authentication is verified after cutover.
+resource "cloudflare_dns_record" "sgrsuk-dmarc" {
+  zone_id = cloudflare_zone.sgrsuk.id
+  type    = "TXT"
+  name    = "_dmarc.sgrs.uk"
+  content = "\"v=DMARC1; p=none\""
+  ttl     = 3600
+  proxied = false
+}
+
+output "sgrsuk_name_servers" {
+  description = "Set these nameservers at the registrar after verifying the Cloudflare zone."
+  value       = cloudflare_zone.sgrsuk.name_servers
 }
