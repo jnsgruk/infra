@@ -3,7 +3,7 @@
 Terraform configuration for:
 
 - [jnsgr.uk](./dns-jnsgr-uk.tf) on Cloudflare.
-- [sgrs.uk](./dns-sgrs-uk.tf) on DigitalOcean.
+- [sgrs.uk](./dns-sgrs-uk.tf) on Cloudflare.
 - [tabor-consulting.co.uk](./dns-tabor-consulting-co-uk.tf) on DigitalOcean.
 
 The `jnsgr.uk` apex uses the existing Cloudflare Worker `website`. Its Custom
@@ -44,7 +44,7 @@ terraform show terraform.tfplan
 For validation without backend access:
 
 ```bash
-terraform fmt -check dns-jnsgr-uk.tf provider.tf variables.tf
+terraform fmt -check dns-jnsgr-uk.tf dns-sgrs-uk.tf dns-sgrs-uk-migration.tf provider.tf variables.tf
 terraform init -backend=false
 terraform validate
 ```
