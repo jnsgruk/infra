@@ -14,8 +14,10 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v7
 
-      - name: Install terraform
-        run: sudo snap install terraform --classic
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_wrapper: false
 
       - name: Check formatting of Cloudflare configuration
         run: terraform fmt -check dns-jnsgr-uk.tf dns-jnsgr-uk-migration.tf provider.tf variables.tf
@@ -39,8 +41,10 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v7
 
-      - name: Install terraform
-        run: sudo snap install terraform --classic
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_wrapper: false
 
       - name: Initialise terraform
         run: terraform init
