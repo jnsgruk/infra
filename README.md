@@ -44,7 +44,7 @@ terraform show terraform.tfplan
 For validation without backend access:
 
 ```bash
-terraform fmt -check dns-jnsgr-uk.tf dns-sgrs-uk.tf provider.tf variables.tf
+terraform fmt -check dns-jnsgr-uk.tf dns-sgrs-uk.tf dns-sgrs-uk-migration.tf provider.tf variables.tf
 terraform init -backend=false
 terraform validate
 ```

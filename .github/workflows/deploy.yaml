@@ -20,7 +20,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Check formatting of Cloudflare configuration
-        run: terraform fmt -check dns-jnsgr-uk.tf dns-sgrs-uk.tf provider.tf variables.tf
+        run: terraform fmt -check dns-jnsgr-uk.tf dns-sgrs-uk.tf dns-sgrs-uk-migration.tf provider.tf variables.tf
 
       - name: Initialise without production state
         run: terraform init -backend=false
