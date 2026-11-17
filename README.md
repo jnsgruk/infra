@@ -4,7 +4,7 @@ Terraform configuration for:
 
 - [jnsgr.uk](./dns-jnsgr-uk.tf) on Cloudflare.
 - [sgrs.uk](./dns-sgrs-uk.tf) on Cloudflare.
-- [tabor-consulting.co.uk](./dns-tabor-consulting-co-uk.tf) on Cloudflare (DNS-only).
+- [tabor-consulting.co.uk](./dns-tabor-consulting-co-uk.tf) on Cloudflare.
 
 The `jnsgr.uk` apex uses the existing Cloudflare Worker `website`. Its Custom
 Domain manages DNS and TLS automatically. `www` uses a proxied, originless A
@@ -12,6 +12,12 @@ record (`192.0.2.0`) and redirects to the HTTPS apex, preserving paths and queri
 A separate apex-only redirect enforces HTTPS without changing zone settings.
 Coffee, books, identity proofs and shared Fly certificate-validation records
 remain unchanged in Cloudflare.
+
+The `tabor-consulting.co.uk` apex uses the `tabor-consulting` Worker, with the
+same HTTPS and `www` redirects. Microsoft 365 mail records and Fly certificate
+validation CNAMEs remain DNS-only and unchanged. Its
+[website repository](https://github.com/tabor-consulting/tabor-consulting.co.uk)
+owns that Worker's code and assets.
 
 Terraform owns domain bindings, DNS and redirects. The
 [website repository](https://github.com/jnsgruk/jnsgr.uk) owns Worker code and assets;
@@ -26,7 +32,6 @@ Supply credentials through environment variables:
 
 ```bash
 ARM_ACCESS_KEY="..."
-TF_VAR_do_token="..."
 CLOUDFLARE_API_TOKEN="..."
 TF_VAR_cloudflare_account_id="..."
 ```
@@ -44,7 +49,7 @@ terraform show terraform.tfplan
 For validation without backend access:
 
 ```bash
-terraform fmt -check dns-jnsgr-uk.tf dns-sgrs-uk.tf dns-tabor-consulting-co-uk.tf dns-tabor-consulting-co-uk-migration.tf provider.tf variables.tf
+terraform fmt -check dns-jnsgr-uk.tf dns-sgrs-uk.tf dns-tabor-consulting-co-uk.tf provider.tf variables.tf
 terraform init -backend=false
 terraform validate
 ```
